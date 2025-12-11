@@ -1,0 +1,6 @@
+dist/
+node_modules/
+tests/
+
+cache.json
+package-lock.json

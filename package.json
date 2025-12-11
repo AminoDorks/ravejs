@@ -1,0 +1,35 @@
+{
+  "name": "rave.js",
+  "version": "1.0.0",
+  "description": "API Wrapper for app Rave - Watch Party",
+  "keywords": [
+    "ravejs",
+    "wrapper",
+    "rave",
+    "wemesh",
+    "watchparty",
+    "api",
+    "wrapper",
+    "javascript",
+    "nodejs",
+    "repository",
+    "communication",
+    "aminodorks",
+    "celt_is_god"
+  ],
+  "homepage": "https://github.com/AminoDorks/ravejs#readme",
+  "bugs": {
+    "url": "https://github.com/AminoDorks/ravejs/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AminoDorks/ravejs.git"
+  },
+  "license": "MIT",
+  "author": "celt_is_god",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}

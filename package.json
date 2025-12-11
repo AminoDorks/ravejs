@@ -1,7 +1,13 @@
 {
-  "name": "rave.js",
+  "name": "ravejs",
   "version": "1.0.1",
-  "description": "API Wrapper for app Rave - Watch Party",
+  "private": false,
+  "main": "dist/index.js",
+  "files": [
+    "README.MD",
+    "dist"
+  ],
+  "description": "API Wrapper on TypeScript for app Rave - Watch Party",
   "keywords": [
     "ravejs",
     "wrapper",
@@ -15,7 +21,8 @@
     "repository",
     "communication",
     "aminodorks",
-    "celt_is_god"
+    "celt_is_god",
+    "typescript"
   ],
   "homepage": "https://github.com/AminoDorks/ravejs#readme",
   "bugs": {
@@ -28,8 +35,10 @@
   "license": "MIT",
   "author": "celt_is_god",
   "type": "commonjs",
-  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2"
   }
 }

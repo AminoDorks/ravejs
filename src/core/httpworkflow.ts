@@ -3,7 +3,7 @@ import BodyReadable from 'undici/types/readable';
 import { z } from 'zod';
 
 import { API_URL, WE_MESH_HEADERS } from '../constants';
-import { HeadersType } from '../schemas/private';
+import { HeadersType, MethodType } from '../schemas/private';
 import { generateHash } from '../utils/cryptography';
 import { LOGGER } from '../utils/logger';
 import { GetRequestConfig, PostRequestConfig } from '../schemas/configs';
@@ -15,25 +15,25 @@ export class HttpWorkflow {
 
   set headers(headers: HeadersType) {
     this.__headers = {
-      ...this.__headers,
       ...headers,
+      ...this.__headers,
     };
   }
 
-  private __configureGetHeaders = (): HeadersType => {
+  private __configureHeaders = (): HeadersType => {
     return {
       ...this.__headers,
       'request-ts': Date.now().toString(),
     };
   };
 
-  private __configurePostHeaders = (data: string) => {
-    const headers = this.__configureGetHeaders();
+  private __configureDataHeaders = (data: string) => {
+    const headers = this.__configureHeaders();
 
     return {
       ...headers,
       'request-hash': generateHash(
-        headers.Authorization,
+        headers.Authorization.slice(7, headers.Authorization.length),
         headers['request-ts'],
         data.length,
       ),
@@ -54,7 +54,26 @@ export class HttpWorkflow {
     const response = await body.text();
     LOGGER.child({ path: fullPath }).info(statusCode);
 
-    return schema.parse(response) as T;
+    return schema.parse(JSON.parse(response)) as T;
+  };
+
+  private __sendDataRequest = async <T>(
+    method: MethodType,
+    config: PostRequestConfig,
+    schema: z.ZodSchema,
+  ): Promise<T> => {
+    const { statusCode, body } = await request(`${API_URL}${config.path}`, {
+      method,
+      headers: this.__configureDataHeaders(config.body),
+      body: config.body,
+    });
+
+    return await this.__handleResponse(
+      statusCode,
+      `${API_URL}${config.path}`,
+      body,
+      schema,
+    );
   };
 
   public sendGet = async <T>(
@@ -63,22 +82,28 @@ export class HttpWorkflow {
   ): Promise<T> => {
     const { statusCode, body } = await request(`${API_URL}${config.path}`, {
       method: 'GET',
-      headers: this.__configureGetHeaders(),
+      headers: this.__configureHeaders(),
     });
 
-    return await this.__handleResponse(statusCode, config.path, body, schema);
+    return await this.__handleResponse(
+      statusCode,
+      `${API_URL}${config.path}`,
+      body,
+      schema,
+    );
   };
 
   public sendPost = async <T>(
     config: PostRequestConfig,
     schema: z.ZodSchema,
   ): Promise<T> => {
-    const { statusCode, body } = await request(`${API_URL}${config.path}`, {
-      method: 'POST',
-      headers: this.__configurePostHeaders(config.body),
-      body: config.body,
-    });
+    return await this.__sendDataRequest('POST', config, schema);
+  };
 
-    return await this.__handleResponse(statusCode, config.path, body, schema);
+  public sendPut = async <T>(
+    config: PostRequestConfig,
+    schema: z.ZodSchema,
+  ): Promise<T> => {
+    return await this.__sendDataRequest('PUT', config, schema);
   };
 }

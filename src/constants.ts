@@ -2,7 +2,7 @@
 
 import { APIErrorData } from './schemas/error';
 
-export const VERSION = '1.1.1';
+export const VERSION = '1.2.1';
 
 export const API_URL = 'https://api1.a-l-p-a.com';
 export const MOJO_AUTH_URL = 'https://api.mojoauth.com';
@@ -15,7 +15,8 @@ export const WE_MESH_HEADERS = {
   'Content-Type': 'application/json',
   Accept: 'application/json',
   Connection: 'keep-alive',
-  'User-Agent': 'Rave/2133 (8.1.93) (Android 666; FuckYourApp; AminoDorks; ru)',
+  'User-Agent':
+    'Rave/2133 (8.1.93) (Android 15; 24117RN76O; Redmi tanzanite; ru)',
   'WeMesh-API-Version': '4.0',
   'WeMesh-Platform': 'android',
   ssaid: '13c4e8d5fac67aff',

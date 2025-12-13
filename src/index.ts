@@ -1,6 +1,10 @@
 import { exec } from 'child_process';
 import { VERSION } from './constants';
 
+export { Rave } from './core/rave';
+export { APIException } from './utils/exceptions';
+export * as schemas from './schemas/index';
+
 console.log(
   `\x1b[34mVisit our community:\x1b[32m https://t.me/aminodorks\x1b[0m`,
 );

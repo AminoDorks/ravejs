@@ -1,1 +1,103 @@
-export const VERSION = '1.0.1';
+// Constants
+
+import { APIErrorData } from './schemas/error';
+
+export const VERSION = '1.1.1';
+
+export const API_URL = 'https://api1.a-l-p-a.com';
+export const MOJO_AUTH_URL = 'https://api.mojoauth.com';
+export const HASH_SECRET =
+  'c3ab8ff13720e8ad9047dd39466b3c8974e592c2fa383d4a3960714caef0c4f2';
+
+// Structures
+
+export const WE_MESH_HEADERS = {
+  'Content-Type': 'application/json',
+  Accept: 'application/json',
+  Connection: 'keep-alive',
+  'User-Agent': 'Rave/2133 (8.1.93) (Android 666; FuckYourApp; AminoDorks; ru)',
+  'WeMesh-API-Version': '4.0',
+  'WeMesh-Platform': 'android',
+  ssaid: '13c4e8d5fac67aff',
+  'Client-Version': '8.1.93',
+};
+
+export const MOJO_AUTH_HEADERS = {
+  Connection: 'keep-alive',
+  'User-Agent': 'okhttp/5.1.0',
+  Host: 'api.mojoauth.com',
+  'Content-Type': 'application/json; charset=utf-8',
+  'X-API-Key': '45af6a2e-4c1c-45a5-9874-df1eb3a22fe2',
+};
+
+export const PATCHED_DEVICE = {
+  adId: 'e1bbf669-e099-4559-8a8f-ecf44da51fc4',
+  appVersionRelease: 2133,
+  appVersionStr: '8.1.93',
+  carriers: ['MegaFon RUS'],
+  isBackground: true,
+  isChromebook: false,
+  isLandscape: false,
+  isPhone: true,
+  isTV: false,
+  isTablet: false,
+  isVPN: false,
+  lang: 'ru',
+  network: 'WIFI',
+  osName: 'ANDROID',
+  osVersion: '15',
+  phoneModelBrand: 'Redmi',
+  phoneModelManufacturer: 'Xiaomi',
+  phoneModelModel: '24117RN76O',
+  ramFree: 429,
+  ramTotal: 512,
+  ramUsed: 83,
+  screenX: 1080,
+  screenY: 2249,
+  sdkVersion: 35,
+};
+
+export const PATCHED_IP_DATA = {
+  as: 'AS41733 JSC "ER-Telecom Holding"',
+  asname: 'ZTELECOM-AS',
+  city: 'St Petersburg',
+  continent: 'Europe',
+  continentCode: 'EU',
+  country: 'Russia',
+  countryCode: 'RU',
+  currency: 'RUB',
+  district: '',
+  hosting: false,
+  isp: 'Z-Telecom',
+  lat: 59.8983,
+  lon: 30.2618,
+  mobile: false,
+  offset: 10800,
+  org: 'JSC ER-Telecom',
+  proxy: false,
+  query: '5.18.252.218',
+  region: 'SPE',
+  regionName: 'St.-Petersburg',
+  status: 'success',
+  timezone: 'Europe/Moscow',
+  zip: '190990',
+};
+
+export const CODES_MAP: Record<number, APIErrorData> = {
+  400: {
+    name: 'RaveJSException.BadRequest',
+    message: 'Bad Request. Invalid request parameters.',
+  },
+  401: {
+    name: 'RaveJSException.Unauthorized',
+    message: 'Unauthorized. Invalid credentials.',
+  },
+  403: {
+    name: 'RaveJSException.Forbidden',
+    message: 'Forbidden. Access denied.',
+  },
+  404: {
+    name: 'RaveJSException.NotFound',
+    message: 'Not Found. Resource not found.',
+  },
+};

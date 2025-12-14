@@ -1,3 +1,4 @@
+import { AuthFactory } from '../factories/auth-factory';
 import { UserFactory } from '../factories/user-factory';
 import { RaveConfig } from '../schemas/public';
 import initLogger from '../utils/logger';
@@ -7,16 +8,22 @@ export class Rave {
   private __config?: RaveConfig;
   private __http: HttpWorkflow;
 
+  private __authFactory?: AuthFactory;
   private __userFactory?: UserFactory;
 
   constructor(config: RaveConfig = {}) {
     this.__config = config;
     this.__http = new HttpWorkflow();
-    this.__http.headers = {
-      Authorization: `Bearer ${this.__config.credentials?.token}`,
-    };
+    if (this.__config.credentials)
+      this.__http.token = this.__config.credentials.token;
 
     initLogger(!!config.enableLogging);
+  }
+
+  get auth() {
+    if (!this.__authFactory)
+      return (this.__authFactory = new AuthFactory(this.__config, this.__http));
+    return this.__authFactory;
   }
 
   get user() {

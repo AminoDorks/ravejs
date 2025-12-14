@@ -6,18 +6,26 @@ import { API_URL, WE_MESH_HEADERS } from '../constants';
 import { HeadersType, MethodType } from '../schemas/private';
 import { generateHash } from '../utils/cryptography';
 import { LOGGER } from '../utils/logger';
-import { GetRequestConfig, PostRequestConfig } from '../schemas/configs';
+import {
+  GetRequestConfig,
+  PostRequestConfig,
+  RawRequestConfig,
+} from '../schemas/configs';
 import { isOk } from '../utils/utils';
 import { APIException } from '../utils/exceptions';
 
 export class HttpWorkflow {
   private __headers: HeadersType = WE_MESH_HEADERS;
 
-  set headers(headers: HeadersType) {
-    this.__headers = {
-      ...headers,
-      ...this.__headers,
-    };
+  get token(): string {
+    return this.__headers.Authorization.slice(
+      7,
+      this.__headers.Authorization.length,
+    );
+  }
+
+  set token(token: string) {
+    this.__headers.Authorization = `Bearer ${token}`;
   }
 
   private __configureHeaders = (): HeadersType => {
@@ -33,7 +41,7 @@ export class HttpWorkflow {
     return {
       ...headers,
       'request-hash': generateHash(
-        headers.Authorization.slice(7, headers.Authorization.length),
+        this.token,
         headers['request-ts'],
         data.length,
       ),
@@ -105,5 +113,18 @@ export class HttpWorkflow {
     schema: z.ZodSchema,
   ): Promise<T> => {
     return await this.__sendDataRequest('PUT', config, schema);
+  };
+
+  public sendRaw = async <T>(
+    config: RawRequestConfig,
+    schema: z.ZodSchema,
+  ): Promise<T> => {
+    const { statusCode, body } = await request(config.path, {
+      headers: config.headers,
+      method: config.method,
+      body: config.body,
+    });
+
+    return await this.__handleResponse(statusCode, config.path, body, schema);
   };
 }

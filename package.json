@@ -1,6 +1,6 @@
 {
   "name": "ravejs",
-  "version": "1.2.1",
+  "version": "1.3.1",
   "private": false,
   "main": "dist/index.js",
   "files": [

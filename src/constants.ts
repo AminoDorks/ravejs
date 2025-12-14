@@ -2,12 +2,14 @@
 
 import { APIErrorData } from './schemas/error';
 
-export const VERSION = '1.2.1';
+export const VERSION = '1.3.1';
 
 export const API_URL = 'https://api1.a-l-p-a.com';
+export const THIRD_API_URL = 'https://api3.a-l-p-a.com';
 export const MOJO_AUTH_URL = 'https://api.mojoauth.com';
 export const HASH_SECRET =
   'c3ab8ff13720e8ad9047dd39466b3c8974e592c2fa383d4a3960714caef0c4f2';
+export const DEFAULT_LANGUAGE = 'ru';
 
 // Structures
 
@@ -82,6 +84,18 @@ export const PATCHED_IP_DATA = {
   status: 'success',
   timezone: 'Europe/Moscow',
   zip: '190990',
+};
+
+export const PARSE_USERS_HEADERS = {
+  'Content-Type': 'application/json',
+  Accept: 'application/json',
+  Connection: 'keep-alive',
+  'User-Agent': 'Parse Android SDK API Level 35',
+  'X-Parse-Application-Id': '83a03c48-0f97-4f01-8a80-f603ea2a2270',
+  'X-Parse-Installation-Id': '810ea3e5-b316-4409-afe7-a0abbef37ac2',
+  'X-Parse-App-Build-Version': '2133',
+  'X-Parse-App-Display-Version': '8.1.93',
+  'X-Parse-OS-Version': '15',
 };
 
 export const CODES_MAP: Record<number, APIErrorData> = {

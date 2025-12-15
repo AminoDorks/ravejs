@@ -1,6 +1,8 @@
 import z from 'zod';
-import { UserSchema } from './rave/user';
+
+import { ProfileSchema, UserSchema } from './rave/user';
 import { MeshSchema } from './rave/mesh';
+import { PagingSchema } from './private';
 
 export const EditProfileSchema = z.object({
   data: UserSchema,
@@ -105,11 +107,39 @@ export const GetManyMeshesSchema = z.object({
       users: z.array(UserSchema),
     }),
   ),
-  paging: z
-    .object({
-      next: z.string().optional(),
-    })
-    .optional(),
+  paging: PagingSchema,
+});
+
+export const GetMeshSchema = z.object({
+  data: z.object({
+    ...MeshSchema.shape,
+    users: z.array(UserSchema),
+  }),
+});
+
+export const GetUserSchema = z.object({
+  data: z.object({
+    bio: z.object({
+      bio: z.string().optional(),
+      metadata: z.object({
+        position: z.number(),
+        privacy: z.string(),
+      }),
+    }),
+    profile: ProfileSchema,
+  }),
+});
+
+export const SendFriendshipSchema = z.object({
+  data: z.object({
+    fromUserId: z.number(),
+    state: z.string(),
+    toUserId: z.number(),
+  }),
+});
+
+export const ValidateMeSchema = z.object({
+  data: z.string(),
 });
 
 export type EditProfileResponse = z.infer<typeof EditProfileSchema>;
@@ -124,3 +154,7 @@ export type MojoLoginResponse = z.infer<typeof MojoLoginSchema>;
 export type AuthenticateResponse = z.infer<typeof AuthenticateSchema>;
 export type GetAvatarUploadResponse = z.infer<typeof GetAvatarUploadSchema>;
 export type GetManyMeshesResponse = z.infer<typeof GetManyMeshesSchema>;
+export type GetMeshResponse = z.infer<typeof GetMeshSchema>;
+export type GetUserResponse = z.infer<typeof GetUserSchema>;
+export type SendFriendshipResponse = z.infer<typeof SendFriendshipSchema>;
+export type ValidateMeResponse = z.infer<typeof ValidateMeSchema>;

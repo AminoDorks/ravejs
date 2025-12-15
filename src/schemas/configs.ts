@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 export const PostRequestConfigSchema = z.object({
   path: z.string().readonly(),
+  baseUrl: z.string().optional(),
   body: z.string().readonly(),
   contentType: z.string().optional(),
 });

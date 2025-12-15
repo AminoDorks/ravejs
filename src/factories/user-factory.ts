@@ -5,6 +5,10 @@ import {
   EditProfileResponse,
   GetAvatarUploadResponse,
   GetAvatarUploadSchema,
+  GetUserResponse,
+  GetUserSchema,
+  SendFriendshipResponse,
+  SendFriendshipSchema,
 } from '../schemas/responses';
 
 export class UserFactory {
@@ -13,6 +17,27 @@ export class UserFactory {
   constructor(http: HttpWorkflow) {
     this.__http = http;
   }
+
+  public get = async (userId: number): Promise<GetUserResponse> => {
+    return await this.__http.sendGet<GetUserResponse>(
+      {
+        path: `/profiles/${userId}?exclude=false&clientVersion=1`,
+      },
+      GetUserSchema,
+    );
+  };
+
+  public sendFriendship = async (
+    userId: number,
+  ): Promise<SendFriendshipResponse> => {
+    return await this.__http.sendPost<SendFriendshipResponse>(
+      {
+        path: `/friendships`,
+        body: JSON.stringify({ id: userId }),
+      },
+      SendFriendshipSchema,
+    );
+  };
 
   public edit = async (
     builder: EditProfileBuilder,

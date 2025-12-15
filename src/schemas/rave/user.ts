@@ -12,4 +12,12 @@ export const UserSchema = z.object({
   name: z.string(),
 });
 
+export const ProfileSchema = UserSchema.omit({
+  id: true,
+  lat: true,
+  lng: true,
+  lang: true,
+});
+
 export type User = z.infer<typeof UserSchema>;
+export type Profile = z.infer<typeof ProfileSchema>;

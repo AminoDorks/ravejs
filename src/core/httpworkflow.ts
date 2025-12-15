@@ -2,7 +2,7 @@ import { Dispatcher, request } from 'undici';
 import BodyReadable from 'undici/types/readable';
 import { z } from 'zod';
 
-import { API_URL, WE_MESH_HEADERS } from '../constants';
+import { API_URL, API_HEADERS, WE_MESH_API_URL } from '../constants';
 import { HeadersType, MethodType } from '../schemas/private';
 import { generateHash } from '../utils/cryptography';
 import { LOGGER } from '../utils/logger';
@@ -15,7 +15,8 @@ import { isOk } from '../utils/utils';
 import { APIException } from '../utils/exceptions';
 
 export class HttpWorkflow {
-  private __headers: HeadersType = WE_MESH_HEADERS;
+  private __headers: HeadersType = API_HEADERS;
+  private __weMeshHeaders: HeadersType = API_HEADERS;
 
   get token(): string {
     return this.__headers.Authorization.slice(
@@ -26,6 +27,10 @@ export class HttpWorkflow {
 
   set token(token: string) {
     this.__headers.Authorization = `Bearer ${token}`;
+  }
+
+  set weMeshToken(token: string) {
+    this.__weMeshHeaders.Authorization = `Bearer ${token}`;
   }
 
   set popHeaders(key: string) {
@@ -64,7 +69,8 @@ export class HttpWorkflow {
     config: PostRequestConfig,
     schema: z.ZodSchema,
   ): Promise<T> => {
-    const { statusCode, body } = await request(`${API_URL}${config.path}`, {
+    const baseUrl = config.baseUrl || API_URL;
+    const { statusCode, body } = await request(`${baseUrl}${config.path}`, {
       method,
       headers: this.__configureHeaders(config.body),
       body: config.body,
@@ -72,7 +78,7 @@ export class HttpWorkflow {
 
     return await this.__handleResponse(
       statusCode,
-      `${API_URL}${config.path}`,
+      `${baseUrl}${config.path}`,
       body,
       schema,
     );
@@ -82,14 +88,15 @@ export class HttpWorkflow {
     config: GetRequestConfig,
     schema: z.ZodSchema,
   ): Promise<T> => {
-    const { statusCode, body } = await request(`${API_URL}${config.path}`, {
+    const baseUrl = config.baseUrl || API_URL;
+    const { statusCode, body } = await request(`${baseUrl}${config.path}`, {
       method: 'GET',
       headers: this.__configureHeaders(),
     });
 
     return await this.__handleResponse(
       statusCode,
-      `${API_URL}${config.path}`,
+      `${baseUrl}${config.path}`,
       body,
       schema,
     );
@@ -107,6 +114,33 @@ export class HttpWorkflow {
     schema: z.ZodSchema,
   ): Promise<T> => {
     return await this.__sendDataRequest('PUT', config, schema);
+  };
+
+  public sendWeMeshGet = async <T>(
+    config: GetRequestConfig,
+    schema: z.ZodSchema,
+  ): Promise<T> => {
+    return await this.sendGet<T>(
+      {
+        ...config,
+        baseUrl: WE_MESH_API_URL,
+      },
+      schema,
+    );
+  };
+
+  public sendWeMeshPost = async <T>(
+    config: PostRequestConfig,
+    schema: z.ZodSchema,
+  ): Promise<T> => {
+    return await this.__sendDataRequest(
+      'POST',
+      {
+        ...config,
+        baseUrl: WE_MESH_API_URL,
+      },
+      schema,
+    );
   };
 
   public sendRaw = async <T>(

@@ -16,7 +16,7 @@ export class Rave {
   constructor(config: RaveConfig = {}) {
     this.__config = config;
     this.__http = new HttpWorkflow();
-    if (this.__config.credentials)
+    if (this.__config.credentials?.token)
       this.__http.token = this.__config.credentials.token;
 
     initLogger(!!config.enableLogging);

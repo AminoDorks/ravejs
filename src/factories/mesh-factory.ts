@@ -4,6 +4,8 @@ import { GetManyMeshesParams, RaveConfig } from '../schemas';
 import {
   GetManyMeshesResponse,
   GetManyMeshesSchema,
+  GetMeshResponse,
+  GetMeshSchema,
 } from '../schemas/responses';
 
 export class MeshFactory {
@@ -15,8 +17,21 @@ export class MeshFactory {
     this.__http = http;
   }
 
+  public get = async (meshId: string): Promise<GetMeshResponse> => {
+    return await this.__http.sendGet<GetMeshResponse>(
+      {
+        path: `/meshes/${meshId}`,
+      },
+      GetMeshSchema,
+    );
+  };
+
   public getMany = async (
-    params: GetManyMeshesParams = { limit: 20, language: DEFAULT_LANGUAGE },
+    params: GetManyMeshesParams = {
+      limit: 20,
+      language: DEFAULT_LANGUAGE,
+      isPublic: true,
+    },
   ): Promise<GetManyMeshesResponse> => {
     return await this.__http.sendGet<GetManyMeshesResponse>(
       {

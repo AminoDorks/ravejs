@@ -1,7 +1,7 @@
 import z from 'zod';
 
 export const MeshSchema = z.object({
-  blurT: z.boolean(),
+  blurT: z.boolean().optional(),
   category: z.string(),
   channel: z.number(),
   createdAt: z.string(),
@@ -41,3 +41,5 @@ export const MeshSchema = z.object({
   vikiPass: z.boolean(),
   voipMode: z.string(),
 });
+
+export type Mesh = z.infer<typeof MeshSchema>;

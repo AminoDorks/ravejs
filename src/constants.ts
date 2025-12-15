@@ -2,18 +2,21 @@ import { APIErrorData } from './schemas/error';
 
 // Constants
 
-export const VERSION = '1.4.2';
+export const VERSION = '1.5.2';
 
 export const API_URL = 'https://api1.a-l-p-a.com';
-export const THIRD_API_URL = 'https://api3.a-l-p-a.com';
+export const PARSE_API_URL = 'https://api3.a-l-p-a.com';
+export const EVENTS_API_URL = 'https://api2.a-l-p-a.com/api';
+export const WE_MESH_API_URL = 'https://wallace2.red.wemesh.ca';
 export const MOJO_AUTH_URL = 'https://api.mojoauth.com';
 export const HASH_SECRET =
   'c3ab8ff13720e8ad9047dd39466b3c8974e592c2fa383d4a3960714caef0c4f2';
 export const DEFAULT_LANGUAGE = 'ru';
+export const UUID_PATTERN = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
 
 // Structures
 
-export const WE_MESH_HEADERS = {
+export const API_HEADERS = {
   'Content-Type': 'application/json',
   Accept: 'application/json',
   Connection: 'keep-alive',

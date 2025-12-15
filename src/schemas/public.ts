@@ -1,12 +1,14 @@
 import z from 'zod';
 
 export const LanguagesSchema = z.enum(['en', 'ru']);
+export const AuthenticatorMethodSchema = z.enum(['LOGIN', 'REGISTER']);
 
 export const RaveConfigSchema = z.object({
   credentials: z
     .object({
-      token: z.string(),
-      deviceId: z.string(),
+      token: z.string().optional(),
+      deviceId: z.string().optional(),
+      weMeshJWT: z.string().optional(),
     })
     .optional(),
   enableLogging: z.boolean().optional(),
@@ -31,3 +33,4 @@ export type RaveConfig = z.infer<typeof RaveConfigSchema>;
 export type EditProfileBuilder = z.infer<typeof EditProfileBuilderSchema>;
 export type GetManyMeshesParams = z.infer<typeof GetManyMeshesSchema>;
 export type Languages = z.infer<typeof LanguagesSchema>;
+export type AuthenticatorMethod = z.infer<typeof AuthenticatorMethodSchema>;

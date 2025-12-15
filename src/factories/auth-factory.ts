@@ -3,11 +3,11 @@ import {
   MOJO_AUTH_HEADERS,
   MOJO_AUTH_URL,
   PARSE_USERS_HEADERS,
-  THIRD_API_URL,
+  PARSE_API_URL,
 } from '../constants';
 import { HttpWorkflow } from '../core/httpworkflow';
 import { RaveConfig } from '../schemas';
-import { AuthenticatorMethod } from '../schemas/private';
+import { AuthenticatorMethod } from '../schemas/public';
 import {
   AuthenticateSchema,
   AuthenticateResponse,
@@ -19,6 +19,8 @@ import {
   ParseUserCredentialsSchema,
   SendMagicLinkResponse,
   SendMagicLinkSchema,
+  ValidateMeResponse,
+  ValidateMeSchema,
 } from '../schemas/responses';
 import { generateToken } from '../utils/cryptography';
 import { APIException } from '../utils/exceptions';
@@ -108,7 +110,7 @@ export class AuthFactory {
       {
         method: 'POST',
         headers: PARSE_USERS_HEADERS,
-        path: `${THIRD_API_URL}/parse/users`,
+        path: `${PARSE_API_URL}/parse/users`,
         body: JSON.stringify({
           authData: {
             mojo: {
@@ -181,5 +183,21 @@ export class AuthFactory {
       deviceId,
       language,
     );
+  };
+
+  public getWeMeshJWT = async (deviceId?: string): Promise<string> => {
+    const { data } = await this.__http.sendGet<ValidateMeResponse>(
+      {
+        path: `/users/self/validateMe?deviceId=${deviceId || this.__config.credentials?.deviceId}`,
+      },
+      ValidateMeSchema,
+    );
+    this.__config.credentials = {
+      ...this.__config.credentials,
+      weMeshJWT: data,
+    };
+    this.__http.weMeshToken = data;
+
+    return data;
   };
 }

@@ -7,7 +7,10 @@ import {
 } from '../constants';
 import { HttpWorkflow } from '../core/httpworkflow';
 import { RaveConfig } from '../schemas';
+import { AuthenticatorMethod } from '../schemas/private';
 import {
+  AuthenticateSchema,
+  AuthenticateResponse,
   CheckRegisterStateResponse,
   CheckRegisterStateSchema,
   MojoLoginResponse,
@@ -18,6 +21,7 @@ import {
   SendMagicLinkSchema,
 } from '../schemas/responses';
 import { generateToken } from '../utils/cryptography';
+import { APIException } from '../utils/exceptions';
 
 export class AuthFactory {
   private __config: RaveConfig;
@@ -27,6 +31,46 @@ export class AuthFactory {
     this.__config = config;
     this.__http = http;
   }
+
+  private __authenticator = async (
+    stateId: string,
+    action: AuthenticatorMethod,
+    name: string = generateToken(),
+    deviceId: string = generateToken(),
+    language: string = DEFAULT_LANGUAGE,
+  ): Promise<AuthenticateResponse> => {
+    const state = await this.checkRegisterState(stateId);
+    if (!state.authenticated) {
+      APIException.throw(401);
+    }
+
+    const userCredentials = await this.parseUserCredentials(
+      state.oauth!.idToken,
+      state.user!.email,
+    );
+
+    const { data } = await this.mojoLogin(
+      state.user!.email,
+      userCredentials.objectId,
+      userCredentials.sessionToken,
+      name,
+      deviceId,
+      language,
+    );
+
+    if (action == 'REGISTER') this.__http.popHeaders = 'Authorization';
+
+    return AuthenticateSchema.parse({
+      isNewUser: data.newUser,
+      email: state.user?.email,
+      username: userCredentials.username,
+      deviceId: deviceId,
+      token: userCredentials.sessionToken.slice(
+        2,
+        userCredentials.sessionToken.length,
+      ),
+    });
+  };
 
   public sendMagicLink = async (
     email: string,
@@ -106,6 +150,36 @@ export class AuthFactory {
         }),
       },
       MojoLoginSchema,
+    );
+  };
+
+  public login = async (
+    stateId: string,
+    name?: string,
+    deviceId?: string,
+    language?: string,
+  ): Promise<AuthenticateResponse> => {
+    return await this.__authenticator(
+      stateId,
+      'LOGIN',
+      name,
+      deviceId,
+      language,
+    );
+  };
+
+  public register = async (
+    stateId: string,
+    name?: string,
+    deviceId?: string,
+    language?: string,
+  ): Promise<AuthenticateResponse> => {
+    return await this.__authenticator(
+      stateId,
+      'REGISTER',
+      name,
+      deviceId,
+      language,
     );
   };
 }

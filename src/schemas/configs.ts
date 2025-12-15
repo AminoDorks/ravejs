@@ -14,7 +14,7 @@ export const RawRequestConfigSchema = z.object({
   method: z.string(),
   headers: z.record(z.string(), z.string()).optional(),
   path: z.string().readonly(),
-  body: z.string().optional(),
+  body: z.union([z.string(), z.instanceof(Buffer)]).optional(),
 });
 
 export type PostRequestConfig = z.infer<typeof PostRequestConfigSchema>;

@@ -1,6 +1,11 @@
+import z from 'zod';
 import { HttpWorkflow } from '../core/httpworkflow';
 import { EditProfileBuilder, EditProfileBuilderSchema } from '../schemas';
-import { EditProfileResponse } from '../schemas/responses';
+import {
+  EditProfileResponse,
+  GetAvatarUploadResponse,
+  GetAvatarUploadSchema,
+} from '../schemas/responses';
 
 export class UserFactory {
   private readonly __http: HttpWorkflow;
@@ -19,5 +24,38 @@ export class UserFactory {
       },
       EditProfileBuilderSchema,
     );
+  };
+
+  public getAvatarUpload = async (): Promise<GetAvatarUploadResponse> => {
+    return await this.__http.sendPost<GetAvatarUploadResponse>(
+      {
+        path: '/users/self/avatar/upload',
+        body: JSON.stringify({ mime: 'image/jpeg' }),
+      },
+      GetAvatarUploadSchema,
+    );
+  };
+
+  public uploadOnUrl = async (
+    uploadUrl: string,
+    image: Buffer,
+  ): Promise<any> => {
+    return await this.__http.sendRaw(
+      {
+        path: uploadUrl,
+        method: 'PUT',
+        body: image,
+        headers: {
+          'Content-Type': 'image/jpeg',
+        },
+      },
+      z.any(), // nothing returns
+    );
+  };
+
+  public uploadAvatar = async (image: Buffer): Promise<string> => {
+    const { data } = await this.getAvatarUpload();
+    await this.uploadOnUrl(data.uploadUrl, image);
+    return data.uploadUrl;
   };
 }

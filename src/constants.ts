@@ -1,8 +1,8 @@
-// Constants
-
 import { APIErrorData } from './schemas/error';
 
-export const VERSION = '1.3.1';
+// Constants
+
+export const VERSION = '1.4.2';
 
 export const API_URL = 'https://api1.a-l-p-a.com';
 export const THIRD_API_URL = 'https://api3.a-l-p-a.com';
@@ -17,8 +17,7 @@ export const WE_MESH_HEADERS = {
   'Content-Type': 'application/json',
   Accept: 'application/json',
   Connection: 'keep-alive',
-  'User-Agent':
-    'Rave/2133 (8.1.93) (Android 15; 24117RN76O; Redmi tanzanite; ru)',
+  'User-Agent': 'Rave/2133 (8.1.93) (Android 666; FuckRave; AndFuckYouAll; ru)',
   'WeMesh-API-Version': '4.0',
   'WeMesh-Platform': 'android',
   ssaid: '13c4e8d5fac67aff',
@@ -114,5 +113,9 @@ export const CODES_MAP: Record<number, APIErrorData> = {
   404: {
     name: 'RaveJSException.NotFound',
     message: 'Not Found. Resource not found.',
+  },
+  429: {
+    name: 'RaveJSException.RateLimitExceeded',
+    message: 'Rate Limit Exceeded. Too many requests.',
   },
 };

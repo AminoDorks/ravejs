@@ -1,5 +1,4 @@
 import { createHmac } from 'crypto';
-import { v4 } from 'uuid';
 
 import { HASH_SECRET } from '../constants';
 
@@ -15,8 +14,10 @@ export const generateHash = (
 };
 
 export const generateToken = () => {
-  return v4().replace(/[xy]/g, (c) => {
-    const r = (Math.random() * 16) | 0;
-    return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
-  });
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
+    .replace(/[xy]/g, (c) => {
+      const r = (Math.random() * 16) | 0;
+      return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
+    })
+    .replace(/-/g, '');
 };

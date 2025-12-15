@@ -28,23 +28,17 @@ export class HttpWorkflow {
     this.__headers.Authorization = `Bearer ${token}`;
   }
 
-  private __configureHeaders = (): HeadersType => {
+  set popHeaders(key: string) {
+    delete this.__headers[key];
+  }
+
+  private __configureHeaders = (data?: string): HeadersType => {
+    const timestamp = Date.now().toString();
+
     return {
       ...this.__headers,
-      'request-ts': Date.now().toString(),
-    };
-  };
-
-  private __configureDataHeaders = (data: string) => {
-    const headers = this.__configureHeaders();
-
-    return {
-      ...headers,
-      'request-hash': generateHash(
-        this.token,
-        headers['request-ts'],
-        data.length,
-      ),
+      'request-ts': timestamp,
+      'request-hash': generateHash(this.token, timestamp, data?.length || 0),
     };
   };
 
@@ -72,7 +66,7 @@ export class HttpWorkflow {
   ): Promise<T> => {
     const { statusCode, body } = await request(`${API_URL}${config.path}`, {
       method,
-      headers: this.__configureDataHeaders(config.body),
+      headers: this.__configureHeaders(config.body),
       body: config.body,
     });
 

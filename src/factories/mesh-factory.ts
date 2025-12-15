@@ -1,0 +1,28 @@
+import { DEFAULT_LANGUAGE } from '../constants';
+import { HttpWorkflow } from '../core/httpworkflow';
+import { GetManyMeshesParams, RaveConfig } from '../schemas';
+import {
+  GetManyMeshesResponse,
+  GetManyMeshesSchema,
+} from '../schemas/responses';
+
+export class MeshFactory {
+  private readonly __config: RaveConfig;
+  private readonly __http: HttpWorkflow;
+
+  constructor(config: RaveConfig = {}, http: HttpWorkflow) {
+    this.__config = config;
+    this.__http = http;
+  }
+
+  public getMany = async (
+    params: GetManyMeshesParams = { limit: 20, language: DEFAULT_LANGUAGE },
+  ): Promise<GetManyMeshesResponse> => {
+    return await this.__http.sendGet<GetManyMeshesResponse>(
+      {
+        path: `/meshes/self?deviceId=${this.__config.credentials?.deviceId}&public=${!!params.isPublic}&friends=${!!params.hasFriends}&local=${!!params.local}&invited=${!!params.hasInvited}&limit=${params.limit}&lang=${params.language}`,
+      },
+      GetManyMeshesSchema,
+    );
+  };
+}

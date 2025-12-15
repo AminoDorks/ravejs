@@ -1,5 +1,6 @@
 import z from 'zod';
 import { UserSchema } from './rave/user';
+import { MeshSchema } from './rave/mesh';
 
 export const EditProfileSchema = z.object({
   data: UserSchema,
@@ -80,6 +81,37 @@ export const MojoLoginSchema = z.object({
   }),
 });
 
+export const AuthenticateSchema = z.object({
+  isNewUser: z.boolean(),
+  email: z.string(),
+  username: z.string(),
+  deviceId: z.string(),
+  token: z.string(),
+});
+
+export const GetAvatarUploadSchema = z.object({
+  data: z.object({
+    expiresAt: z.string(),
+    fileName: z.string(),
+    mime: z.string(),
+    uploadUrl: z.string(),
+  }),
+});
+
+export const GetManyMeshesSchema = z.object({
+  data: z.array(
+    z.object({
+      mesh: MeshSchema,
+      users: z.array(UserSchema),
+    }),
+  ),
+  paging: z
+    .object({
+      next: z.string().optional(),
+    })
+    .optional(),
+});
+
 export type EditProfileResponse = z.infer<typeof EditProfileSchema>;
 export type SendMagicLinkResponse = z.infer<typeof SendMagicLinkSchema>;
 export type CheckRegisterStateResponse = z.infer<
@@ -89,3 +121,6 @@ export type ParseUserCredentialsResponse = z.infer<
   typeof ParseUserCredentialsSchema
 >;
 export type MojoLoginResponse = z.infer<typeof MojoLoginSchema>;
+export type AuthenticateResponse = z.infer<typeof AuthenticateSchema>;
+export type GetAvatarUploadResponse = z.infer<typeof GetAvatarUploadSchema>;
+export type GetManyMeshesResponse = z.infer<typeof GetManyMeshesSchema>;

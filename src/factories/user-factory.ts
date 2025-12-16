@@ -1,14 +1,15 @@
 import z from 'zod';
 import { HttpWorkflow } from '../core/httpworkflow';
-import { EditProfileBuilder, EditProfileBuilderSchema } from '../schemas';
+import { EditProfileBuilder } from '../schemas';
 import {
   EditProfileResponse,
+  EditProfileSchema,
   GetAvatarUploadResponse,
   GetAvatarUploadSchema,
   GetUserResponse,
   GetUserSchema,
-  SendFriendshipResponse,
-  SendFriendshipSchema,
+  FriendshipResponse,
+  FriendshipSchema,
 } from '../schemas/responses';
 
 export class UserFactory {
@@ -17,6 +18,18 @@ export class UserFactory {
   constructor(http: HttpWorkflow) {
     this.__http = http;
   }
+
+  private __friendshipRequests = async (
+    body: string,
+  ): Promise<FriendshipResponse> => {
+    return await this.__http.sendPost<FriendshipResponse>(
+      {
+        path: `/friendships`,
+        body,
+      },
+      FriendshipSchema,
+    );
+  };
 
   public get = async (userId: number): Promise<GetUserResponse> => {
     return await this.__http.sendGet<GetUserResponse>(
@@ -29,13 +42,23 @@ export class UserFactory {
 
   public sendFriendship = async (
     userId: number,
-  ): Promise<SendFriendshipResponse> => {
-    return await this.__http.sendPost<SendFriendshipResponse>(
-      {
-        path: `/friendships`,
-        body: JSON.stringify({ id: userId }),
-      },
-      SendFriendshipSchema,
+  ): Promise<FriendshipResponse> => {
+    return await this.__friendshipRequests(JSON.stringify({ id: userId }));
+  };
+
+  public acceptFriendship = async (
+    userId: number,
+  ): Promise<FriendshipResponse> => {
+    return await this.__friendshipRequests(
+      JSON.stringify({ id: userId, state: 'friends' }),
+    );
+  };
+
+  public declineFriendship = async (
+    userId: number,
+  ): Promise<FriendshipResponse> => {
+    return await this.__friendshipRequests(
+      JSON.stringify({ id: userId, state: 'notfriends' }),
     );
   };
 
@@ -47,7 +70,7 @@ export class UserFactory {
         path: '/users/self',
         body: JSON.stringify(builder),
       },
-      EditProfileBuilderSchema,
+      EditProfileSchema,
     );
   };
 

@@ -4,11 +4,11 @@ export const UserSchema = z.object({
   avatar: z.string(),
   country: z.string(),
   displayName: z.string().optional(),
-  handle: z.string(),
+  handle: z.string().optional(),
   id: z.number(),
   lang: z.string(),
-  lat: z.float32(),
-  lng: z.float32(),
+  lat: z.number(),
+  lng: z.number(),
   name: z.string(),
 });
 

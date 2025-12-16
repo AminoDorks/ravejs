@@ -1,6 +1,5 @@
 import { exec } from 'child_process';
 import { VERSION } from './constants';
-import { Rave } from './core/rave';
 
 export { Rave } from './core/rave';
 export { APIException } from './utils/exceptions';

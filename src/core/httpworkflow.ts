@@ -15,13 +15,20 @@ import { isOk } from '../utils/utils';
 import { APIException } from '../utils/exceptions';
 
 export class HttpWorkflow {
-  private __headers: HeadersType = API_HEADERS;
-  private __weMeshHeaders: HeadersType = API_HEADERS;
+  private __headers: HeadersType = { ...API_HEADERS };
+  private __weMeshHeaders: HeadersType = { ...API_HEADERS };
 
   get token(): string {
     return this.__headers.Authorization.slice(
       7,
       this.__headers.Authorization.length,
+    );
+  }
+
+  get weMeshToken(): string {
+    return this.__weMeshHeaders.Authorization.slice(
+      7,
+      this.__weMeshHeaders.Authorization.length,
     );
   }
 
@@ -37,11 +44,14 @@ export class HttpWorkflow {
     delete this.__headers[key];
   }
 
-  private __configureHeaders = (data?: string): HeadersType => {
+  private __configureHeaders = (
+    data?: string,
+    headers?: HeadersType,
+  ): HeadersType => {
     const timestamp = Date.now().toString();
 
     return {
-      ...this.__headers,
+      ...(headers || this.__headers),
       'request-ts': timestamp,
       'request-hash': generateHash(this.token, timestamp, data?.length || 0),
     };
@@ -61,7 +71,11 @@ export class HttpWorkflow {
     const response = await body.text();
     LOGGER.child({ path: fullPath }).info(statusCode);
 
-    return schema.parse(JSON.parse(response)) as T;
+    try {
+      return schema.parse(JSON.parse(response)) as T;
+    } catch {
+      return response as T;
+    }
   };
 
   private __sendDataRequest = async <T>(
@@ -72,7 +86,7 @@ export class HttpWorkflow {
     const baseUrl = config.baseUrl || API_URL;
     const { statusCode, body } = await request(`${baseUrl}${config.path}`, {
       method,
-      headers: this.__configureHeaders(config.body),
+      headers: this.__configureHeaders(config.body, config.headers),
       body: config.body,
     });
 
@@ -91,7 +105,7 @@ export class HttpWorkflow {
     const baseUrl = config.baseUrl || API_URL;
     const { statusCode, body } = await request(`${baseUrl}${config.path}`, {
       method: 'GET',
-      headers: this.__configureHeaders(),
+      headers: this.__configureHeaders(undefined, config.headers),
     });
 
     return await this.__handleResponse(
@@ -124,6 +138,7 @@ export class HttpWorkflow {
       {
         ...config,
         baseUrl: WE_MESH_API_URL,
+        headers: this.__weMeshHeaders,
       },
       schema,
     );
@@ -138,6 +153,7 @@ export class HttpWorkflow {
       {
         ...config,
         baseUrl: WE_MESH_API_URL,
+        headers: this.__weMeshHeaders,
       },
       schema,
     );

@@ -3,6 +3,7 @@ import z from 'zod';
 import { ProfileSchema, UserSchema } from './rave/user';
 import { MeshSchema } from './rave/mesh';
 import { PagingSchema } from './private';
+import { ThreadSchema } from './rave/thread';
 
 export const EditProfileSchema = z.object({
   data: UserSchema,
@@ -130,7 +131,7 @@ export const GetUserSchema = z.object({
   }),
 });
 
-export const SendFriendshipSchema = z.object({
+export const FriendshipSchema = z.object({
   data: z.object({
     fromUserId: z.number(),
     state: z.string(),
@@ -140,6 +141,10 @@ export const SendFriendshipSchema = z.object({
 
 export const ValidateMeSchema = z.object({
   data: z.string(),
+});
+
+export const GetThreadsSchema = z.object({
+  data: z.array(ThreadSchema),
 });
 
 export type EditProfileResponse = z.infer<typeof EditProfileSchema>;
@@ -156,5 +161,6 @@ export type GetAvatarUploadResponse = z.infer<typeof GetAvatarUploadSchema>;
 export type GetManyMeshesResponse = z.infer<typeof GetManyMeshesSchema>;
 export type GetMeshResponse = z.infer<typeof GetMeshSchema>;
 export type GetUserResponse = z.infer<typeof GetUserSchema>;
-export type SendFriendshipResponse = z.infer<typeof SendFriendshipSchema>;
+export type FriendshipResponse = z.infer<typeof FriendshipSchema>;
 export type ValidateMeResponse = z.infer<typeof ValidateMeSchema>;
+export type GetThreadsResponse = z.infer<typeof GetThreadsSchema>;

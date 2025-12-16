@@ -5,6 +5,7 @@ export const PostRequestConfigSchema = z.object({
   baseUrl: z.string().optional(),
   body: z.string().readonly(),
   contentType: z.string().optional(),
+  headers: z.record(z.string(), z.string()).optional(),
 });
 
 export const GetRequestConfigSchema = PostRequestConfigSchema.omit({

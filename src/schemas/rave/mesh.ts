@@ -16,7 +16,7 @@ export const MeshSchema = z.object({
   mediaUrl: z.string(),
   originator: z.number(),
   playMode: z.string(),
-  position: z.float32(),
+  position: z.number(),
   server: z.string(),
   shareLink: z.string(),
   thumbnails: z
@@ -30,7 +30,7 @@ export const MeshSchema = z.object({
       high: z.string().optional(),
     })
     .optional(),
-  time: z.float32(),
+  time: z.number(),
   videoAuthor: z.string(),
   videoDuration: z.number(),
   videoProvider: z.string(),

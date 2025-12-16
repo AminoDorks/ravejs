@@ -8,7 +8,7 @@ export const RaveConfigSchema = z.object({
     .object({
       token: z.string().optional(),
       deviceId: z.string().optional(),
-      weMeshJWT: z.string().optional(),
+      autoJWT: z.boolean().optional(),
     })
     .optional(),
   enableLogging: z.boolean().optional(),

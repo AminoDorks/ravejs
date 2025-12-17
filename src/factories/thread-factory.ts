@@ -1,6 +1,14 @@
 import { HttpWorkflow } from '../core/httpworkflow';
 import { Thread } from '../schemas/rave/thread';
-import { GetThreadsResponse, GetThreadsSchema } from '../schemas/responses';
+import {
+  GetThreadResponse,
+  GetThreadSchema,
+  GetThreadsResponse,
+  GetThreadsSchema,
+  SendMessageResponse,
+  SendMessageSchema,
+} from '../schemas/responses';
+import { generateMessageId } from '../utils/utils';
 
 export class ThreadFactory {
   private readonly __http: HttpWorkflow;
@@ -18,5 +26,45 @@ export class ThreadFactory {
         GetThreadsSchema,
       )
     ).data;
+  };
+
+  public create = async (userId: number): Promise<Thread> => {
+    return (
+      await this.__http.sendWeMeshPost<GetThreadResponse>(
+        {
+          path: '/dms/thread',
+          body: JSON.stringify({
+            targetUserId: userId,
+          }),
+        },
+        GetThreadSchema,
+      )
+    ).data;
+  };
+
+  public sendMessage = async (
+    threadId: string,
+    content: string,
+  ): Promise<SendMessageResponse> => {
+    const messageId = await generateMessageId();
+
+    return await this.__http.sendWeMeshPost<SendMessageResponse>(
+      {
+        path: `/dms/thread/${threadId}`,
+        body: JSON.stringify({
+          correlateId: messageId,
+          messageBody: {
+            chat: content,
+            detected_lang: 'ru',
+            id: messageId,
+            translations: {
+              ru: content,
+            },
+          },
+          messageType: 'MESSAGE',
+        }),
+      },
+      SendMessageSchema,
+    );
   };
 }

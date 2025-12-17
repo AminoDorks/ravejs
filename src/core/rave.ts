@@ -1,5 +1,3 @@
-import z from 'zod';
-
 import { AuthFactory } from '../factories/auth-factory';
 import { MeshFactory } from '../factories/mesh-factory';
 import { UserFactory } from '../factories/user-factory';
@@ -72,17 +70,5 @@ export class Rave {
     this.__http.weMeshToken = data;
 
     return data;
-  };
-
-  public getMeshByLink = async (meshLink: string): Promise<string> => {
-    return matchMeshId(
-      await this.__http.sendRaw(
-        {
-          method: 'GET',
-          path: meshLink,
-        },
-        z.string(),
-      ),
-    );
   };
 }

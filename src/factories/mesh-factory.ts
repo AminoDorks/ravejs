@@ -1,3 +1,4 @@
+import z from 'zod';
 import { DEFAULT_LANGUAGE } from '../constants';
 import { HttpWorkflow } from '../core/httpworkflow';
 import { GetManyMeshesParams, RaveConfig } from '../schemas';
@@ -7,6 +8,7 @@ import {
   GetMeshResponse,
   GetMeshSchema,
 } from '../schemas/responses';
+import { matchMeshId } from '../utils/utils';
 
 export class MeshFactory {
   private readonly __config: RaveConfig;
@@ -24,6 +26,20 @@ export class MeshFactory {
       },
       GetMeshSchema,
     );
+  };
+
+  public getByLink = async (meshLink: string): Promise<GetMeshResponse> => {
+    const meshId = matchMeshId(
+      await this.__http.sendRaw(
+        {
+          method: 'GET',
+          path: meshLink,
+        },
+        z.string(),
+      ),
+    );
+
+    return await this.get(meshId);
   };
 
   public getMany = async (

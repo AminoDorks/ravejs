@@ -4,6 +4,7 @@ import { ProfileSchema, UserSchema } from './rave/user';
 import { MeshSchema } from './rave/mesh';
 import { PagingSchema } from './private';
 import { ThreadSchema } from './rave/thread';
+import { MessageSchema } from './rave/message';
 
 export const EditProfileSchema = z.object({
   data: UserSchema,
@@ -147,6 +148,20 @@ export const GetThreadsSchema = z.object({
   data: z.array(ThreadSchema),
 });
 
+export const GetThreadSchema = z.object({
+  data: ThreadSchema,
+});
+
+export const SendMessageSchema = z.object({
+  data: z.object({
+    correlateId: z.string(),
+    threadId: z.string(),
+    messageType: z.string(),
+    originator: z.number(),
+    messageBody: MessageSchema,
+  }),
+});
+
 export type EditProfileResponse = z.infer<typeof EditProfileSchema>;
 export type SendMagicLinkResponse = z.infer<typeof SendMagicLinkSchema>;
 export type CheckRegisterStateResponse = z.infer<
@@ -164,3 +179,5 @@ export type GetUserResponse = z.infer<typeof GetUserSchema>;
 export type FriendshipResponse = z.infer<typeof FriendshipSchema>;
 export type ValidateMeResponse = z.infer<typeof ValidateMeSchema>;
 export type GetThreadsResponse = z.infer<typeof GetThreadsSchema>;
+export type GetThreadResponse = z.infer<typeof GetThreadSchema>;
+export type SendMessageResponse = z.infer<typeof SendMessageSchema>;

@@ -2,7 +2,7 @@ import { APIErrorData } from './schemas/error';
 
 // Constants
 
-export const VERSION = '1.6.3';
+export const VERSION = '1.7.3';
 
 export const API_URL = 'https://api1.a-l-p-a.com';
 export const PARSE_API_URL = 'https://api3.a-l-p-a.com';
@@ -120,5 +120,9 @@ export const CODES_MAP: Record<number, APIErrorData> = {
   429: {
     name: 'RaveJSException.RateLimitExceeded',
     message: 'Rate Limit Exceeded. Too many requests.',
+  },
+  500: {
+    name: 'RaveJSException.InternalServerError',
+    message: 'Internal Server Error. Something went wrong.',
   },
 };

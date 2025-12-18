@@ -67,7 +67,7 @@ export class MeshFactory {
     );
   };
 
-  public join = async (meshId: string) => {
+  public join = async (meshId: string): Promise<MeshSocket> => {
     const mesh = await this.get(meshId);
     await this.__http.sendPost<StatusedResponse>(
       {

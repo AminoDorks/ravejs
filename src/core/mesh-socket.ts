@@ -86,4 +86,8 @@ export class MeshSocket {
       }),
     );
   };
+
+  public leave = (): void => {
+    this.__websocket.close();
+  };
 }

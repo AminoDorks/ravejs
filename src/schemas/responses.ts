@@ -5,6 +5,7 @@ import { MeshSchema } from './rave/mesh';
 import { PagingSchema } from './private';
 import { ThreadSchema } from './rave/thread';
 import { MessageSchema } from './rave/message';
+import { AccountSchema } from './rave/account';
 
 export const EditProfileSchema = z.object({
   data: UserSchema,
@@ -162,6 +163,14 @@ export const SendMessageSchema = z.object({
   }),
 });
 
+export const StatusSchema = z.object({
+  status: z.number(),
+});
+
+export const GetAccountSchema = z.object({
+  data: AccountSchema,
+});
+
 export type EditProfileResponse = z.infer<typeof EditProfileSchema>;
 export type SendMagicLinkResponse = z.infer<typeof SendMagicLinkSchema>;
 export type CheckRegisterStateResponse = z.infer<
@@ -181,3 +190,5 @@ export type ValidateMeResponse = z.infer<typeof ValidateMeSchema>;
 export type GetThreadsResponse = z.infer<typeof GetThreadsSchema>;
 export type GetThreadResponse = z.infer<typeof GetThreadSchema>;
 export type SendMessageResponse = z.infer<typeof SendMessageSchema>;
+export type StatusedResponse = z.infer<typeof StatusSchema>;
+export type GetAccountResponse = z.infer<typeof GetAccountSchema>;

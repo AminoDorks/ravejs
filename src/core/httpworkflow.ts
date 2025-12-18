@@ -1,5 +1,6 @@
-import { Dispatcher, request } from 'undici';
+import { Dispatcher, ProxyAgent, request } from 'undici';
 import BodyReadable from 'undici/types/readable';
+import { socksDispatcher, SocksProxies } from 'fetch-socks';
 import { z } from 'zod';
 
 import { API_URL, API_HEADERS, WE_MESH_API_URL } from '../constants';
@@ -18,6 +19,9 @@ export class HttpWorkflow {
   private __headers: HeadersType = { ...API_HEADERS };
   private __weMeshHeaders: HeadersType = { ...API_HEADERS };
 
+  private __currentProxy?: string;
+  private __currentDispatcher?: ProxyAgent;
+
   get token(): string {
     return this.__headers.Authorization.slice(
       7,
@@ -30,6 +34,10 @@ export class HttpWorkflow {
       7,
       this.__weMeshHeaders.Authorization.length,
     );
+  }
+
+  get proxy(): string | undefined {
+    return this.__currentProxy;
   }
 
   set token(token: string) {
@@ -88,6 +96,7 @@ export class HttpWorkflow {
       method,
       headers: this.__configureHeaders(config.body, config.headers),
       body: config.body,
+      dispatcher: this.__currentDispatcher,
     });
 
     return await this.__handleResponse(
@@ -106,6 +115,7 @@ export class HttpWorkflow {
     const { statusCode, body } = await request(`${baseUrl}${config.path}`, {
       method: 'GET',
       headers: this.__configureHeaders(undefined, config.headers),
+      dispatcher: this.__currentDispatcher,
     });
 
     return await this.__handleResponse(
@@ -167,8 +177,22 @@ export class HttpWorkflow {
       headers: config.headers,
       method: config.method,
       body: config.body,
+      dispatcher: this.__currentDispatcher,
     });
 
     return await this.__handleResponse(statusCode, config.path, body, schema);
   };
+
+  public setProxy(rawProxy: string, socksProxy: SocksProxies) {
+    if (this.__currentDispatcher) this.__currentDispatcher.close();
+
+    this.__currentProxy = rawProxy;
+    this.__currentDispatcher = socksDispatcher(socksProxy, {
+      connect: {
+        rejectUnauthorized: false,
+      },
+    });
+
+    LOGGER.info({ proxy: rawProxy }, 'Proxy set');
+  }
 }

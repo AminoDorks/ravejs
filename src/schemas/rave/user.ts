@@ -6,7 +6,7 @@ export const UserSchema = z.object({
   displayName: z.string().optional(),
   handle: z.string().optional(),
   id: z.number(),
-  lang: z.string(),
+  lang: z.string().optional(),
   lat: z.number(),
   lng: z.number(),
   name: z.string(),

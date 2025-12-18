@@ -1,3 +1,5 @@
+import { randomUUID } from 'crypto';
+
 import { HttpWorkflow } from '../core/httpworkflow';
 import { Thread } from '../schemas/rave/thread';
 import {
@@ -8,7 +10,6 @@ import {
   SendMessageResponse,
   SendMessageSchema,
 } from '../schemas/responses';
-import { generateMessageId } from '../utils/utils';
 
 export class ThreadFactory {
   private readonly __http: HttpWorkflow;
@@ -46,7 +47,7 @@ export class ThreadFactory {
     threadId: string,
     content: string,
   ): Promise<SendMessageResponse> => {
-    const messageId = await generateMessageId();
+    const messageId = randomUUID();
 
     return await this.__http.sendWeMeshPost<SendMessageResponse>(
       {

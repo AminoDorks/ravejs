@@ -1,17 +1,23 @@
 import z from 'zod';
+import { AccountSchema } from './rave/account';
 
 export const LanguagesSchema = z.enum(['en', 'ru']);
 export const AuthenticatorMethodSchema = z.enum(['LOGIN', 'REGISTER']);
 
+export const CredentialsSchema = z.object({
+  token: z.string(),
+  deviceId: z.string(),
+});
+
 export const RaveConfigSchema = z.object({
   credentials: z
     .object({
-      token: z.string().optional(),
-      deviceId: z.string().optional(),
+      ...CredentialsSchema.shape,
       autoJWT: z.boolean().optional(),
     })
     .optional(),
   enableLogging: z.boolean().optional(),
+  account: AccountSchema.optional(),
 });
 
 export const EditProfileBuilderSchema = z.object({
@@ -29,6 +35,7 @@ export const GetManyMeshesSchema = z.object({
   language: LanguagesSchema,
 });
 
+export type Credentials = z.infer<typeof CredentialsSchema>;
 export type RaveConfig = z.infer<typeof RaveConfigSchema>;
 export type EditProfileBuilder = z.infer<typeof EditProfileBuilderSchema>;
 export type GetManyMeshesParams = z.infer<typeof GetManyMeshesSchema>;

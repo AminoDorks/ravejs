@@ -2,7 +2,7 @@ import { APIErrorData } from './schemas/error';
 
 // Constants
 
-export const VERSION = '1.7.3';
+export const VERSION = '1.8.3';
 
 export const API_URL = 'https://api1.a-l-p-a.com';
 export const PARSE_API_URL = 'https://api3.a-l-p-a.com';
@@ -13,6 +13,7 @@ export const HASH_SECRET =
   'c3ab8ff13720e8ad9047dd39466b3c8974e592c2fa383d4a3960714caef0c4f2';
 export const DEFAULT_LANGUAGE = 'ru';
 export const UUID_PATTERN = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
+export const SOCKET_PING_DELAY = 20000;
 
 // Structures
 

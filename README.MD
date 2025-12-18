@@ -9,8 +9,8 @@
     <h2>RaveJS is a TypeScript library that interacts with the Rave: Watch Party App API.</h2>
 </div>
 
-## [README on English](https://github.com/thatcelt/ravejs/blob/master/README.MD)
-## [README на Русском](https://github.com/thatcelt/ravejs/blob/master/README.RU.MD)
+## [README on English](https://github.com/AminoDorks/ravejs/blob/master/README.MD)
+## [README на Русском](https://github.com/AminoDorks/ravejs/blob/master/README.RU.MD)
 
 ## Table of Contents
 -----------------

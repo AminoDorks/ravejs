@@ -80,6 +80,7 @@ config - configuration for library, you can find it in `RaveConfig` type...
 
 1. `refreshJWT = async (deviceId?: string): Promise<string>` - Refresh JWT token for we mesh API
 2. `getAccount = async (): Promise<Account>` - Get your user profile information after authorization
+3. `proxyIsAlive = async (): Promise<boolean>` - Check if proxy is alive
 
 -----------------
 Rave haves the fully modular structure and parts called `Factories`. Now i will describe them:

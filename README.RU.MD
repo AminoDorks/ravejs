@@ -95,7 +95,8 @@
   
   #### Методы экземпляра `Rave`
   1. `refreshJWT(deviceId?: string): Promise<string>` — обновить JWT-токен  
-  2. `getAccount(): Promise<Account>` — получить данные авторизованного пользователя  
+  2. `getAccount(): Promise<Account>` — получить данные авторизованного пользователя
+  3. `proxyIsAlive = async (): Promise<boolean>` - Проверить, работает ли прокси
   
   ---
   

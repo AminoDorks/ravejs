@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 import { AuthFactory } from '../factories/auth-factory';
 import { MeshFactory } from '../factories/mesh-factory';
 import { UserFactory } from '../factories/user-factory';
@@ -14,6 +16,7 @@ import { ThreadFactory } from '../factories/thread-factory';
 import { Account } from '../schemas/rave/account';
 import { DEFAULT_LANGUAGE, PATCHED_DEVICE } from '../constants';
 import { validateProxy } from '../utils/utils';
+import { APIException } from '../utils/exceptions';
 
 export class Rave {
   private __config?: RaveConfig;
@@ -89,6 +92,21 @@ export class Rave {
       LOGGER.error({ proxy }, 'Invalid proxy');
     }
   }
+
+  public proxyIsAlive = async (): Promise<boolean> => {
+    try {
+      await this.__http.sendRaw<string>(
+        {
+          path: 'https://rave.link',
+          method: 'GET',
+        },
+        z.string(),
+      );
+    } catch (error) {
+      if ((error as APIException).code == 400) return true;
+    }
+    return false;
+  };
 
   public refreshJWT = async (deviceId?: string): Promise<string> => {
     const { data } = await this.__http.sendGet<ValidateMeResponse>(

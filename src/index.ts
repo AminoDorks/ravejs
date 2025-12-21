@@ -2,6 +2,7 @@ import { exec } from 'child_process';
 import { VERSION } from './constants';
 
 export { Rave } from './core/rave';
+export { generateToken } from './utils/cryptography';
 export { APIException } from './utils/exceptions';
 export * as schemas from './schemas/index';
 

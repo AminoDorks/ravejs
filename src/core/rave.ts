@@ -93,6 +93,10 @@ export class Rave {
     }
   }
 
+  public offProxy = () => {
+    this.__http.offDispatcher();
+  };
+
   public proxyIsAlive = async (): Promise<boolean> => {
     try {
       await this.__http.sendRaw<string>(

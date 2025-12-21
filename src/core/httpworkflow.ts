@@ -107,6 +107,10 @@ export class HttpWorkflow {
     );
   };
 
+  public offDispatcher = () => {
+    this.__currentDispatcher = undefined;
+  };
+
   public sendGet = async <T>(
     config: GetRequestConfig,
     schema: z.ZodSchema,

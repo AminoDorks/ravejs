@@ -61,7 +61,7 @@ export class AuthFactory {
     if (action == 'REGISTER') this.__http.popHeaders = 'Authorization';
 
     return AuthenticateSchema.parse({
-      isNewUser: data.newUser,
+      isNewUser: !!data.newUser,
       email: state.user?.email,
       username: userCredentials.username,
       deviceId: deviceId,

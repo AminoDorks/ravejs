@@ -81,7 +81,7 @@ export const ParseUserCredentialsSchema = z.object({
 export const MojoLoginSchema = z.object({
   data: z.object({
     isValid: z.boolean(),
-    newUser: z.boolean(),
+    newUser: z.boolean().optional(),
     suggestedHandles: z.array(z.string()),
   }),
 });

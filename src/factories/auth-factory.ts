@@ -61,7 +61,7 @@ export class AuthFactory {
     if (action == 'REGISTER') this.__http.popHeaders = 'Authorization';
 
     return AuthenticateSchema.parse({
-      isNewUser: !!data.newUser,
+      isNewUser: !!data?.newUser,
       email: state.user?.email,
       username: userCredentials.username,
       deviceId: deviceId,
@@ -130,7 +130,7 @@ export class AuthFactory {
     deviceId: string = generateToken(),
     language: string = DEFAULT_LANGUAGE,
   ): Promise<MojoLoginResponse> => {
-    this.__http.token = parseToken.slice(1, parseToken.length);
+    this.__http.token = parseToken.slice(2, parseToken.length);
     this.__config.credentials = {
       token: this.__http.token,
       deviceId,

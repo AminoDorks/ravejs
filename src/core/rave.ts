@@ -14,7 +14,7 @@ import {
 } from '../schemas/responses';
 import { ThreadFactory } from '../factories/thread-factory';
 import { Account } from '../schemas/rave/account';
-import { DEFAULT_LANGUAGE, PATCHED_DEVICE } from '../constants';
+import { API_URL, DEFAULT_LANGUAGE, PATCHED_DEVICE } from '../constants';
 import { validateProxy } from '../utils/utils';
 import { APIException } from '../utils/exceptions';
 
@@ -101,15 +101,15 @@ export class Rave {
     try {
       await this.__http.sendRaw<string>(
         {
-          path: 'https://rave.link',
+          path: API_URL,
           method: 'GET',
         },
         z.string(),
       );
-    } catch (error) {
-      if ((error as APIException).code == 400) return true;
+    } catch {
+      return false;
     }
-    return false;
+    return true;
   };
 
   public refreshJWT = async (deviceId?: string): Promise<string> => {

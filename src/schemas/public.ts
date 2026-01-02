@@ -14,6 +14,7 @@ export const RaveConfigSchema = z.object({
     .object({
       ...CredentialsSchema.shape,
       autoJWT: z.boolean().optional(),
+      autoAccount: z.boolean().optional(),
     })
     .optional(),
   enableLogging: z.boolean().optional(),

@@ -65,7 +65,7 @@ import { Rave } from 'ravejs';
 A main class to interacting with API in global namespace of app.
 config - configuration for library, you can find it in `RaveConfig` type...
 `RaveConfig` =>
-*    credentials?: { deviceId: string, token: string } - main credentials for authorization
+*    credentials?: { deviceId: string, token: string, autoJWT?: boolean, autoAccount?: boolean } - main credentials for authorization and options
 *    enableLogging?: boolean - enable logging for library
 *    account?: Account - Your user profile information after authorization
 

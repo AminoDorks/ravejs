@@ -16,7 +16,6 @@ import { ThreadFactory } from '../factories/thread-factory';
 import { Account } from '../schemas/rave/account';
 import { API_URL, DEFAULT_LANGUAGE, PATCHED_DEVICE } from '../constants';
 import { validateProxy } from '../utils/utils';
-import { APIException } from '../utils/exceptions';
 
 export class Rave {
   private __config?: RaveConfig;
@@ -33,8 +32,7 @@ export class Rave {
 
     if (this.__config.credentials?.token) {
       this.__http.token = this.__config.credentials.token;
-      this.getAccount();
-
+      if (this.__config.credentials?.autoAccount) this.getAccount();
       if (this.__config.credentials?.autoJWT) this.refreshJWT();
     }
 

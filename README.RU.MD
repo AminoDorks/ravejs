@@ -83,7 +83,7 @@
   Главный класс для взаимодействия с API Rave.
   
   #### Конфигурация (`RaveConfig`)
-  - `credentials?`: `{ deviceId: string, token: string }` — данные для авторизации  
+  - `credentials?`: `{ deviceId: string, token: string, autoJWT?: boolean, autoAccount?: boolean }` — данные для авторизации и опции  
   - `enableLogging?`: `boolean` — включить логирование  
   - `account?`: `Account` — профиль пользователя после авторизации  
   

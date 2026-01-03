@@ -107,6 +107,7 @@ export class MeshFactory {
         deviceId: this.__config.credentials!.deviceId,
         token: this.__config.credentials!.token,
       },
+      proxy: this.__http.proxy,
     });
   };
 }

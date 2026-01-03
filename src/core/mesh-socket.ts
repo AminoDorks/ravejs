@@ -4,6 +4,7 @@ import { randomUUID } from 'crypto';
 import { MeshSocketConfig } from '../schemas/private';
 import { SOCKET_PING_DELAY } from '../constants';
 import { LOGGER } from '../utils/logger';
+import { SocksProxyAgent } from 'socks-proxy-agent';
 
 export class MeshSocket {
   private __config: MeshSocketConfig;
@@ -18,6 +19,9 @@ export class MeshSocket {
         authorization: `Bearer ${this.__config.credentials.token}`,
         'API-Version': '4',
       },
+      agent: this.__config.proxy
+        ? new SocksProxyAgent(this.__config.proxy)
+        : undefined,
     });
 
     this.__websocket.on('open', () => {

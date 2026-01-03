@@ -13,6 +13,7 @@ export const MeshSocketConfigSchema = z.object({
   server: z.string(),
   userId: z.number(),
   credentials: CredentialsSchema,
+  proxy: z.string().optional(),
 });
 
 export type HeadersType = Record<string, string>;

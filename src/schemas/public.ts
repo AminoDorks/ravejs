@@ -1,7 +1,19 @@
 import z from 'zod';
 import { AccountSchema } from './rave/account';
 
-export const LanguagesSchema = z.enum(['en', 'ru']);
+export const LanguagesSchema = z.enum([
+  'en',
+  'ru',
+  'de',
+  'fr',
+  'es',
+  'it',
+  'pt',
+  'ar',
+  'pl',
+  'nl',
+  'uk',
+]);
 export const AuthenticatorMethodSchema = z.enum(['LOGIN', 'REGISTER']);
 
 export const CredentialsSchema = z.object({

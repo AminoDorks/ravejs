@@ -4,10 +4,12 @@ import {
   MOJO_AUTH_URL,
   PARSE_USERS_HEADERS,
   PARSE_API_URL,
+  PATCHED_DEVICE,
 } from '../constants';
 import { HttpWorkflow } from '../core/httpworkflow';
 import { RaveConfig } from '../schemas';
 import { AuthenticatorMethod } from '../schemas/public';
+import { Account } from '../schemas/rave/account';
 import {
   AuthenticateSchema,
   AuthenticateResponse,
@@ -19,6 +21,10 @@ import {
   ParseUserCredentialsSchema,
   SendMagicLinkResponse,
   SendMagicLinkSchema,
+  GetAccountResponse,
+  GetAccountSchema,
+  ValidateMeSchema,
+  ValidateMeResponse,
 } from '../schemas/responses';
 import { generateToken } from '../utils/cryptography';
 import { APIException } from '../utils/exceptions';
@@ -70,6 +76,58 @@ export class AuthFactory {
         userCredentials.sessionToken.length,
       ),
     });
+  };
+
+  public getAccount = async (): Promise<Account> => {
+    const { data } = await this.__http.sendPost<GetAccountResponse>(
+      {
+        path: '/auth/login',
+        body: JSON.stringify({
+          adId: PATCHED_DEVICE.adId,
+          carrierCountry: DEFAULT_LANGUAGE.toUpperCase(),
+          deviceId: this.__config?.credentials?.deviceId,
+          lang: DEFAULT_LANGUAGE,
+          storeCountry: DEFAULT_LANGUAGE.toUpperCase(),
+        }),
+      },
+      GetAccountSchema,
+    );
+
+    this.__config = {
+      ...this.__config,
+      account: data,
+    };
+
+    return this.__config.account!;
+  };
+
+  public refreshJWT = async (deviceId?: string): Promise<string> => {
+    const { data } = await this.__http.sendGet<ValidateMeResponse>(
+      {
+        path: `/users/self/validateMe?deviceId=${deviceId || this.__config?.credentials?.deviceId}`,
+      },
+      ValidateMeSchema,
+    );
+    this.__http.weMeshToken = data;
+
+    return data;
+  };
+
+  public authenticate = async (
+    token: string,
+    deviceId: string,
+  ): Promise<Account> => {
+    this.__config.credentials = {
+      ...this.__config.credentials,
+      token,
+      deviceId,
+    };
+    this.__http.token = token;
+
+    const account = await this.getAccount();
+    await this.refreshJWT(deviceId);
+
+    return account;
   };
 
   public sendMagicLink = async (

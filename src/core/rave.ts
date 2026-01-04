@@ -6,15 +6,8 @@ import { UserFactory } from '../factories/user-factory';
 import { RaveConfig } from '../schemas/public';
 import initLogger, { LOGGER } from '../utils/logger';
 import { HttpWorkflow } from './httpworkflow';
-import {
-  GetAccountResponse,
-  GetAccountSchema,
-  ValidateMeResponse,
-  ValidateMeSchema,
-} from '../schemas/responses';
 import { ThreadFactory } from '../factories/thread-factory';
-import { Account } from '../schemas/rave/account';
-import { API_URL, DEFAULT_LANGUAGE, PATCHED_DEVICE } from '../constants';
+import { API_URL } from '../constants';
 import { validateProxy } from '../utils/utils';
 
 export class Rave {
@@ -30,12 +23,6 @@ export class Rave {
     this.__config = config;
     this.__http = new HttpWorkflow();
 
-    if (this.__config.credentials?.token) {
-      this.__http.token = this.__config.credentials.token;
-      if (this.__config.credentials?.autoAccount) this.getAccount();
-      if (this.__config.credentials?.autoJWT) this.refreshJWT();
-    }
-
     initLogger(!!config.enableLogging);
   }
 
@@ -47,18 +34,14 @@ export class Rave {
     return this.__http.weMeshToken;
   }
 
-  get account() {
-    if (!this.__config?.account) {
-      throw new Error('Account not found');
-    }
-
-    return this.__config.account;
-  }
-
   get auth() {
     if (!this.__authFactory)
       return (this.__authFactory = new AuthFactory(this.__config, this.__http));
     return this.__authFactory;
+  }
+
+  get account() {
+    return this.__config?.account;
   }
 
   get user() {
@@ -108,40 +91,5 @@ export class Rave {
       return false;
     }
     return true;
-  };
-
-  public refreshJWT = async (deviceId?: string): Promise<string> => {
-    const { data } = await this.__http.sendGet<ValidateMeResponse>(
-      {
-        path: `/users/self/validateMe?deviceId=${deviceId || this.__config?.credentials?.deviceId}`,
-      },
-      ValidateMeSchema,
-    );
-    this.__http.weMeshToken = data;
-
-    return data;
-  };
-
-  public getAccount = async (): Promise<Account> => {
-    const { data } = await this.__http.sendPost<GetAccountResponse>(
-      {
-        path: '/auth/login',
-        body: JSON.stringify({
-          adId: PATCHED_DEVICE.adId,
-          carrierCountry: DEFAULT_LANGUAGE.toUpperCase(),
-          deviceId: this.__config?.credentials?.deviceId,
-          lang: DEFAULT_LANGUAGE,
-          storeCountry: DEFAULT_LANGUAGE.toUpperCase(),
-        }),
-      },
-      GetAccountSchema,
-    );
-
-    this.__config = {
-      ...this.__config,
-      account: data,
-    };
-
-    return this.__config.account!;
   };
 }

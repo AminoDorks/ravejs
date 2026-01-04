@@ -48,13 +48,9 @@ To get started with RaveJS, follow these steps:
 import { Rave } from 'ravejs';
 
 (async () => {
-  const rave = new Rave({
-    credentials: {
-      deviceId: 'your_device_id',
-      token: 'your_token'
-    }
-  });
-  console.log(`logged as ${(await rave.getAccount()).id}`);
+const rave = new Rave();
+await rave.auth.authenticate('token', 'device_id')
+console.log(`logged as ${rave.account?.id}`);
 })();
 ```
 
@@ -65,7 +61,7 @@ import { Rave } from 'ravejs';
 A main class to interacting with API in global namespace of app.
 config - configuration for library, you can find it in `RaveConfig` type...
 `RaveConfig` =>
-*    credentials?: { deviceId: string, token: string, autoJWT?: boolean, autoAccount?: boolean } - main credentials for authorization and options
+*    credentials?: { deviceId: string, token: string } - main credentials for authorization and options
 *    enableLogging?: boolean - enable logging for library
 *    account?: Account - Your user profile information after authorization
 
@@ -73,14 +69,13 @@ config - configuration for library, you can find it in `RaveConfig` type...
 
 1. `Rave.token: string` - Authorization bearer token
 2. `Rave.JWT: string` - Authorization JWT token for we mesh API
-3. `Rave.account: Account` - Your user profile information after authorization
+3. `Rave.account: Account | undefined` - Your user profile information after authorization
 4. `Rave.proxy: string | undefined` - Proxy for requests (you can set socks proxy with proxy property setter too)
 
 #### Rave Methods
 
-1. `refreshJWT = async (deviceId?: string): Promise<string>` - Refresh JWT token for we mesh API
-2. `getAccount = async (): Promise<Account>` - Get your user profile information after authorization
-3. `proxyIsAlive = async (): Promise<boolean>` - Check if proxy is alive
+1. `proxyIsAlive = async (): Promise<boolean>` - Check if proxy is alive
+2. `offProxy = (): Promise<void>` - Remove proxy from Rave instance
 
 -----------------
 Rave haves the fully modular structure and parts called `Factories`. Now i will describe them:
@@ -90,11 +85,16 @@ The main factory for authorization and authentication. Can be called with `Rave.
 
 #### Authenticate Factory methods
 
-1. `sendMagicLink = async (email: string, language: string = DEFAULT_LANGUAGE): Promise<SendMagicLinkResponse> - Send magic link to email for authorization, if you doesn't know your credentials or just wanna register`
+1. `refreshJWT = async (deviceId?: string): Promise<string>` - Refresh JWT token for we mesh API
+
+2. `getAccount = async (): Promise<Account>` - Get your user profile information after authorization
+
+3. `authenticate = async (token: string, deviceId: string): Promise<Account>` - Authenticate with token and device id, creates JWT and account info automatically
+4. `sendMagicLink = async (email: string, language: string = DEFAULT_LANGUAGE): Promise<SendMagicLinkResponse> - Send magic link to email for authorization, if you doesn't know your credentials or just wanna register`
 * DEFAULT_LANGUAGE = 'ru'
 * SendMagicLinkResponse - { stateId: string } - stateId for magic link
 
-2. `checkRegisterState = async (stateId: string): Promise<CheckRegisterStateResponse> - Check stateId for magic link`
+5. `checkRegisterState = async (stateId: string): Promise<CheckRegisterStateResponse> - Check stateId for magic link`
 * CheckRegisterStateResponse - {
   authenticated: boolean,
   isSecondFactorLogin: boolean,
@@ -115,7 +115,7 @@ The main factory for authorization and authentication. Can be called with `Rave.
   }
 }
 
-3. `parseUserCredentials = async (idToken: string, email: string): Promise<ParseUserCredentialsResponse> - Parse user credentials from idToken and email`
+6. `parseUserCredentials = async (idToken: string, email: string): Promise<ParseUserCredentialsResponse> - Parse user credentials from idToken and email`
 * ParseUserCredentialsResponse - {
   objectId: string,
   createdAt: string,
@@ -123,14 +123,14 @@ The main factory for authorization and authentication. Can be called with `Rave.
   sessionToken: string,
 }
 
-4. `mojoLogin = async (email: string, parseId: string, parseToken: string, name: string, deviceId?: string, language = DEFAULT_LANGUAGE): Promise<MojoLoginResponse> - Login with mojo service to Rave`
+7. `mojoLogin = async (email: string, parseId: string, parseToken: string, name: string, deviceId?: string, language = DEFAULT_LANGUAGE): Promise<MojoLoginResponse> - Login with mojo service to Rave`
 * MojoLoginResponse - { data: {
   isValid: boolean,
   newUser: boolean,
   suggestedHandles: string[],
 }}
 
-5. `login = async (stateId: string, name?: string, deviceId?: string, language = DEFAULT_LANGUAGE): Promise<AuthenticateResponse> - Simply summary of previous functions for login`
+8. `login = async (stateId: string, name?: string, deviceId?: string, language = DEFAULT_LANGUAGE): Promise<AuthenticateResponse> - Simply summary of previous functions for login`
 * AuthenticateResponse - {
   isNewUser: boolean,
   email: string,
@@ -139,7 +139,7 @@ The main factory for authorization and authentication. Can be called with `Rave.
   token: string,
 }
 
-6. `register = async (email: string, name: string, deviceId?: string, language = DEFAULT_LANGUAGE): Promise<AuthenticateResponse> - Register a new user`
+9. `register = async (email: string, name: string, deviceId?: string, language = DEFAULT_LANGUAGE): Promise<AuthenticateResponse> - Register a new user`
 * RegisterResponse - {
   isNewUser: boolean,
   email: string,

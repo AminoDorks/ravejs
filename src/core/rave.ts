@@ -41,7 +41,13 @@ export class Rave {
   }
 
   get account() {
-    return this.__config?.account;
+    const account = this.__config?.account || this.__authFactory?.account;
+
+    if (!account) {
+      throw new Error('Account not found');
+    }
+
+    return account;
   }
 
   get user() {
@@ -52,7 +58,11 @@ export class Rave {
 
   get mesh() {
     if (!this.__meshFactory)
-      return (this.__meshFactory = new MeshFactory(this.__config, this.__http));
+      return (this.__meshFactory = new MeshFactory(
+        this.__config,
+        this.__http,
+        this.account,
+      ));
     return this.__meshFactory;
   }
 

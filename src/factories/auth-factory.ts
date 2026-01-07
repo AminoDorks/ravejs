@@ -38,6 +38,10 @@ export class AuthFactory {
     this.__http = http;
   }
 
+  get account() {
+    return this.__config.account;
+  }
+
   private __authenticator = async (
     stateId: string,
     action: AuthenticatorMethod,

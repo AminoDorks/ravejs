@@ -19,14 +19,17 @@ import {
 } from '../schemas/responses';
 import { matchMeshId } from '../utils/utils';
 import { MeshSocket } from '../core/mesh-socket';
+import { Account } from '../schemas/rave/account';
 
 export class MeshFactory {
   private readonly __config: RaveConfig;
   private readonly __http: HttpWorkflow;
+  private readonly __account: Account;
 
-  constructor(config: RaveConfig = {}, http: HttpWorkflow) {
+  constructor(config: RaveConfig = {}, http: HttpWorkflow, account: Account) {
     this.__config = config;
     this.__http = http;
+    this.__account = account;
   }
 
   public get = async (meshId: string): Promise<GetMeshResponse> => {
@@ -91,7 +94,7 @@ export class MeshFactory {
           },
           sessionId: randomUUID(),
           user: {
-            id: this.__config.account!.id,
+            id: this.__account.id,
             ip_api_data: PATCHED_IP_DATA,
           },
         }),
@@ -102,7 +105,7 @@ export class MeshFactory {
     return new MeshSocket({
       meshId: meshId,
       server: mesh.data.server,
-      userId: this.__config.account!.id,
+      userId: this.__account.id,
       credentials: {
         deviceId: this.__config.credentials!.deviceId,
         token: this.__config.credentials!.token,

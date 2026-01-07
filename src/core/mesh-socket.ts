@@ -29,7 +29,11 @@ export class MeshSocket {
       this.__sendFullyJoined();
     });
 
-    setInterval(this.__pingServer, SOCKET_PING_DELAY);
+    setInterval(() => {
+      try {
+        this.__pingServer();
+      } catch {}
+    }, SOCKET_PING_DELAY);
   }
 
   private __send = (data: string) => {

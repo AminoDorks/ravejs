@@ -2,7 +2,7 @@ import { APIErrorData } from './schemas/error';
 
 // Constants
 
-export const VERSION = '1.16.10';
+export const VERSION = '1.16.11';
 
 export const API_URL = 'https://api1.a-l-p-a.com';
 export const PARSE_API_URL = 'https://api3.a-l-p-a.com';

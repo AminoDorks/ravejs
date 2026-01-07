@@ -322,9 +322,10 @@ The main class of opened mesh socket to interact with mesh
 
 #### Mesh Socket methods
 
-1. `onclose = (handler: () => Promise<void>)` - Register a handler to be called when the socket is closed
-2. `onerror = (handler: () => Promise<void>)` - Register a handler to be called when the socket encounters an error
-3. `onmessage = (handler: (data: string) => Promise<void>)` - Register a handler to be called when the socket receives a message
+1. `onopen = (handler: () => void)` - Register a handler to be called when the socket is opened
+2. `onclose = (handler: () => Promise<void>)` - Register a handler to be called when the socket is closed
+3. `onerror = (handler: () => Promise<void>)` - Register a handler to be called when the socket encounters an error
+4. `onmessage = (handler: (data: string) => Promise<void>)` - Register a handler to be called when the socket receives a message
 4. `sendMessage = (content: string): void` - Send a message to the mesh
 5. `leave = (): void` - Leave the mesh
 

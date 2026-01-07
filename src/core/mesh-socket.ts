@@ -59,6 +59,11 @@ export class MeshSocket {
     );
   };
 
+  public onopen = (handler: () => void) => {
+    LOGGER.info({ url: this.__url }, 'WebSocket opened');
+    this.__websocket.onopen = handler;
+  };
+
   public onclose = (handler: () => Promise<void>) => {
     LOGGER.info({ url: this.__url }, 'WebSocket closed');
     this.__websocket.on('close', handler);

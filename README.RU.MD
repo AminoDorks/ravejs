@@ -361,19 +361,22 @@ RaveJS использует модульную архитектуру, осно�
 Класс для работы с WebSocket-соединением в меше.
 
 ##### Методы и свойства `MeshSocket`
-1. `onclose(handler: () => Promise<void>): void`  
+1. `onopen(handler: () => void): void`  
+  Обработчик открытия соединения.
+
+2. `onclose(handler: () => Promise<void>): void`  
   Обработчик закрытия соединения.
 
-2. `onerror(handler: () => Promise<void>): void`  
+3. `onerror(handler: () => Promise<void>): void`  
   Обработчик ошибок.
 
-3. `onmessage(handler: (data: string) => Promise<void>): void`  
+4. `onmessage(handler: (data: string) => Promise<void>): void`  
   Обработчик входящих сообщений (сырой JSON-строки).
 
-4. `sendMessage(content: string): void`  
+5. `sendMessage(content: string): void`  
   Отправить сообщение в меш (например, команды управления воспроизведением).
 
-5. `leave(): void`  
+6. `leave(): void`  
   Покинуть меш (закрывает сокет).
 
 ---

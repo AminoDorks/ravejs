@@ -2,8 +2,9 @@ import { APIErrorData } from './schemas/error';
 
 // Constants
 
-export const VERSION = '1.16.12';
+export const VERSION = '1.16.13';
 
+export const SYMBOLS = '0123456789abcdef';
 export const API_URL = 'https://api1.a-l-p-a.com';
 export const PARSE_API_URL = 'https://api3.a-l-p-a.com';
 export const EVENTS_API_URL = 'https://api2.a-l-p-a.com/api';
@@ -21,10 +22,10 @@ export const API_HEADERS = {
   'Content-Type': 'application/json',
   Accept: 'application/json',
   Connection: 'keep-alive',
-  'User-Agent': 'Rave/2133 (8.1.93) (Android 15; sfddsfdsf; sdsdff; ru)',
+  'User-Agent':
+    'Rave/2133 (8.1.93) (Android 666; PatheticDevsTriedToStopMe; FunnyASF; ru)',
   'WeMesh-API-Version': '4.0',
   'WeMesh-Platform': 'android',
-  ssaid: 'sfddsfdsfffdf',
   'Client-Version': '8.1.93',
 };
 

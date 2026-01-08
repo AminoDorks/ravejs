@@ -5,7 +5,7 @@ import { z } from 'zod';
 
 import { API_URL, API_HEADERS, WE_MESH_API_URL } from '../constants';
 import { HeadersType, MethodType } from '../schemas/private';
-import { generateHash } from '../utils/cryptography';
+import { generateHash, generateSSAID } from '../utils/cryptography';
 import { LOGGER } from '../utils/logger';
 import {
   GetRequestConfig,
@@ -61,6 +61,7 @@ export class HttpWorkflow {
     return {
       ...(headers || this.__headers),
       'request-ts': timestamp,
+      ssaid: generateSSAID(),
       'request-hash': generateHash(this.token, timestamp, data?.length || 0),
     };
   };

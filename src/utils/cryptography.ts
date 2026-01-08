@@ -1,6 +1,6 @@
 import { createHmac } from 'crypto';
 
-import { HASH_SECRET, UUID_PATTERN } from '../constants';
+import { HASH_SECRET, SYMBOLS, UUID_PATTERN } from '../constants';
 
 export const generateHash = (
   token: string,
@@ -19,3 +19,9 @@ export const generateToken = () => {
     return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
   }).replace(/-/g, '');
 };
+
+export const generateSSAID = () =>
+  Array.from(
+    { length: 16 },
+    () => SYMBOLS[Math.floor(Math.random() * 16)],
+  ).join('');

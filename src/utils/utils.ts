@@ -1,10 +1,13 @@
 import { SocksProxies } from 'fetch-socks';
 
-export const isOk = (status: number) => status >= 200 && status < 300;
+export const isOk = (status: number) => status >= 200 && status < 303;
 export const matchMeshId = (text: string): string =>
   text.match(
     /\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b/gi,
   )?.[0] || '';
+
+export const parseMeshId = (text: string): string =>
+  text.split('openRaveId=')![1];
 
 export const validateProxy = (proxy: string): SocksProxies => {
   const match = proxy.match(/socks([45])/);

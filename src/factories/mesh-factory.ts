@@ -1,11 +1,13 @@
-import z from 'zod';
+import { request } from 'undici';
 import { randomUUID } from 'crypto';
+import z from 'zod';
 
 import {
   DEFAULT_LANGUAGE,
   EVENTS_API_URL,
   PATCHED_DEVICE,
   PATCHED_IP_DATA,
+  RAVE_LINK_URL,
 } from '../constants';
 import { HttpWorkflow } from '../core/httpworkflow';
 import { GetManyMeshesParams, RaveConfig } from '../schemas';
@@ -17,7 +19,7 @@ import {
   StatusedResponse,
   StatusSchema,
 } from '../schemas/responses';
-import { matchMeshId } from '../utils/utils';
+import { matchMeshId, parseMeshId } from '../utils/utils';
 import { MeshSocket } from '../core/mesh-socket';
 import { Account } from '../schemas/rave/account';
 
@@ -32,16 +34,7 @@ export class MeshFactory {
     this.__account = account;
   }
 
-  public get = async (meshId: string): Promise<GetMeshResponse> => {
-    return await this.__http.sendGet<GetMeshResponse>(
-      {
-        path: `/meshes/${meshId}`,
-      },
-      GetMeshSchema,
-    );
-  };
-
-  public getByLink = async (meshLink: string): Promise<GetMeshResponse> => {
+  private __getRaveLink = async (meshLink: string) => {
     const meshId = matchMeshId(
       await this.__http.sendRaw(
         {
@@ -53,6 +46,24 @@ export class MeshFactory {
     );
 
     return await this.get(meshId);
+  };
+
+  public get = async (meshId: string): Promise<GetMeshResponse> => {
+    return await this.__http.sendGet<GetMeshResponse>(
+      {
+        path: `/meshes/${meshId}`,
+      },
+      GetMeshSchema,
+    );
+  };
+
+  public getByLink = async (meshLink: string): Promise<GetMeshResponse> => {
+    if (meshLink.startsWith(RAVE_LINK_URL))
+      return await this.__getRaveLink(meshLink);
+
+    const { headers } = await request(meshLink);
+
+    return await this.get(parseMeshId(headers.location as string));
   };
 
   public getMany = async (

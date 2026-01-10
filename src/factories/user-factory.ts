@@ -1,6 +1,7 @@
-import z from 'zod';
+import { any } from 'zod';
+
 import { HttpWorkflow } from '../core/httpworkflow';
-import { EditProfileBuilder } from '../schemas';
+import { EditProfileBuilder, Sites, User } from '../schemas';
 import {
   EditProfileResponse,
   EditProfileSchema,
@@ -10,6 +11,10 @@ import {
   GetUserSchema,
   FriendshipResponse,
   FriendshipSchema,
+  GetSuccessResponse,
+  GetSuccessSchema,
+  GetFriendsResponse,
+  GetFriendsSchema,
 } from '../schemas/responses';
 
 export class UserFactory {
@@ -31,12 +36,64 @@ export class UserFactory {
     );
   };
 
+  private __friendshipDelete = async (
+    path: string,
+  ): Promise<GetSuccessResponse> => {
+    return await this.__http.sendDelete<GetSuccessResponse>(
+      {
+        path,
+      },
+      GetSuccessSchema,
+    );
+  };
+
   public get = async (userId: number): Promise<GetUserResponse> => {
     return await this.__http.sendGet<GetUserResponse>(
       {
         path: `/profiles/${userId}?exclude=false&clientVersion=1`,
       },
       GetUserSchema,
+    );
+  };
+
+  public getFriends = async (limit: number = 24): Promise<User[]> => {
+    return (
+      await this.__http.sendGet<GetFriendsResponse>(
+        {
+          path: `/friendships?limit=${limit}`,
+        },
+        GetFriendsSchema,
+      )
+    ).data;
+  };
+
+  public setSite = async (site: Sites, value: string) => {
+    return await this.__http.sendPut<any>(
+      {
+        path: `/profiles`,
+        body: JSON.stringify({
+          connections: {
+            metadata: {
+              position: 8,
+              privacy: 'public',
+            },
+            sites: [
+              {
+                maturity: 'G',
+                metadata: {
+                  position: 0,
+                  privacy: 'public',
+                },
+                site,
+                value,
+              },
+            ],
+          },
+          exclude: false,
+          clientVersion: 1,
+        }),
+      },
+      any(),
     );
   };
 
@@ -61,6 +118,13 @@ export class UserFactory {
       JSON.stringify({ id: userId, state: 'notfriends' }),
     );
   };
+
+  public deleteFriendship = async (userId: number): Promise<boolean> =>
+    (await this.__friendshipDelete(`/friendships?id=${userId}`)).success;
+
+  public deleteFriend = async (userId: number): Promise<boolean> =>
+    (await this.__friendshipDelete(`/friendships/unfriend?id=${userId}`))
+      .success;
 
   public edit = async (
     builder: EditProfileBuilder,
@@ -97,7 +161,7 @@ export class UserFactory {
           'Content-Type': 'image/jpeg',
         },
       },
-      z.any(), // nothing returns
+      any(), // nothing returns
     );
   };
 

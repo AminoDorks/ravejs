@@ -171,6 +171,14 @@ export const GetAccountSchema = z.object({
   data: AccountSchema,
 });
 
+export const GetSuccessSchema = z.object({
+  success: z.boolean(),
+});
+
+export const GetFriendsSchema = z.object({
+  data: z.array(UserSchema),
+});
+
 export type EditProfileResponse = z.infer<typeof EditProfileSchema>;
 export type SendMagicLinkResponse = z.infer<typeof SendMagicLinkSchema>;
 export type CheckRegisterStateResponse = z.infer<
@@ -192,3 +200,5 @@ export type GetThreadResponse = z.infer<typeof GetThreadSchema>;
 export type SendMessageResponse = z.infer<typeof SendMessageSchema>;
 export type StatusedResponse = z.infer<typeof StatusSchema>;
 export type GetAccountResponse = z.infer<typeof GetAccountSchema>;
+export type GetSuccessResponse = z.infer<typeof GetSuccessSchema>;
+export type GetFriendsResponse = z.infer<typeof GetFriendsSchema>;

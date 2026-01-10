@@ -112,13 +112,14 @@ export class HttpWorkflow {
     this.__currentDispatcher = undefined;
   };
 
-  public sendGet = async <T>(
+  public sendGetDelete = async <T>(
+    method: 'GET' | 'DELETE',
     config: GetRequestConfig,
     schema: z.ZodSchema,
   ): Promise<T> => {
     const baseUrl = config.baseUrl || API_URL;
     const { statusCode, body } = await request(`${baseUrl}${config.path}`, {
-      method: 'GET',
+      method,
       headers: this.__configureHeaders(undefined, config.headers),
       dispatcher: this.__currentDispatcher,
     });
@@ -129,6 +130,20 @@ export class HttpWorkflow {
       body,
       schema,
     );
+  };
+
+  public sendGet = async <T>(
+    config: GetRequestConfig,
+    schema: z.ZodSchema,
+  ): Promise<T> => {
+    return await this.sendGetDelete('GET', config, schema);
+  };
+
+  public sendDelete = async <T>(
+    config: GetRequestConfig,
+    schema: z.ZodSchema,
+  ): Promise<T> => {
+    return await this.sendGetDelete('DELETE', config, schema);
   };
 
   public sendPost = async <T>(

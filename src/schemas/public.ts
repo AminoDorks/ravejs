@@ -15,6 +15,7 @@ export const LanguagesSchema = z.enum([
   'uk',
 ]);
 export const AuthenticatorMethodSchema = z.enum(['LOGIN', 'REGISTER']);
+export const SitesSchema = z.enum(['Telegram']);
 
 export const CredentialsSchema = z.object({
   token: z.string(),
@@ -52,3 +53,4 @@ export type EditProfileBuilder = z.infer<typeof EditProfileBuilderSchema>;
 export type GetManyMeshesParams = z.infer<typeof GetManyMeshesSchema>;
 export type Languages = z.infer<typeof LanguagesSchema>;
 export type AuthenticatorMethod = z.infer<typeof AuthenticatorMethodSchema>;
+export type Sites = z.infer<typeof SitesSchema>;

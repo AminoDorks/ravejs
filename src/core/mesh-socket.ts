@@ -15,6 +15,7 @@ export class MeshSocket {
     this.__config = config;
     this.__url = `wss://${this.__config.server}/?roomId=${this.__config.meshId}&peerId=${this.__config.userId}_${this.__config.credentials.deviceId}`;
     this.__websocket = new WebSocket(this.__url, 'protoo', {
+      rejectUnauthorized: false,
       headers: {
         authorization: `Bearer ${this.__config.credentials.token}`,
         'API-Version': '4',

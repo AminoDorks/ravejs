@@ -69,13 +69,12 @@ export class MeshFactory {
   public getMany = async (
     params: GetManyMeshesParams = {
       limit: 20,
-      language: DEFAULT_LANGUAGE,
       isPublic: true,
     },
   ): Promise<GetManyMeshesResponse> => {
     return await this.__http.sendGet<GetManyMeshesResponse>(
       {
-        path: `/meshes/self?deviceId=${this.__config.credentials?.deviceId}&public=${!!params.isPublic}&friends=${!!params.hasFriends}&local=${!!params.local}&invited=${!!params.hasInvited}&limit=${params.limit}&lang=${params.language}`,
+        path: `/meshes/self?deviceId=${this.__config.credentials?.deviceId}&public=${!!params.isPublic}&friends=${!!params.hasFriends}&local=${!!params.local}&invited=${!!params.hasInvited}&limit=${params.limit}&lang=fuckravedevs`,
       },
       GetManyMeshesSchema,
     );

@@ -8,7 +8,7 @@ import {
 } from '../constants';
 import { HttpWorkflow } from '../core/httpworkflow';
 import { RaveConfig } from '../schemas';
-import { AuthenticatorMethod } from '../schemas/public';
+import { AuthenticatorMethod, Languages } from '../schemas/public';
 import { Account } from '../schemas/rave/account';
 import {
   AuthenticateSchema,
@@ -47,7 +47,7 @@ export class AuthFactory {
     action: AuthenticatorMethod,
     name: string = generateToken(),
     deviceId: string = generateToken(),
-    language: string = DEFAULT_LANGUAGE,
+    language: Languages = DEFAULT_LANGUAGE,
   ): Promise<AuthenticateResponse> => {
     const state = await this.checkRegisterState(stateId);
     if (!state.authenticated) {
@@ -136,7 +136,7 @@ export class AuthFactory {
 
   public sendMagicLink = async (
     email: string,
-    language: string = DEFAULT_LANGUAGE,
+    language: Languages = DEFAULT_LANGUAGE,
   ): Promise<SendMagicLinkResponse> => {
     return await this.__http.sendRaw<SendMagicLinkResponse>(
       {
@@ -190,7 +190,7 @@ export class AuthFactory {
     parseToken: string,
     name: string,
     deviceId: string = generateToken(),
-    language: string = DEFAULT_LANGUAGE,
+    language: Languages = DEFAULT_LANGUAGE,
   ): Promise<MojoLoginResponse> => {
     this.__http.token = parseToken.slice(2, parseToken.length);
     this.__config.credentials = {
@@ -219,7 +219,7 @@ export class AuthFactory {
     stateId: string,
     name?: string,
     deviceId?: string,
-    language?: string,
+    language?: Languages,
   ): Promise<AuthenticateResponse> => {
     return await this.__authenticator(
       stateId,
@@ -234,7 +234,7 @@ export class AuthFactory {
     stateId: string,
     name?: string,
     deviceId?: string,
-    language?: string,
+    language?: Languages,
   ): Promise<AuthenticateResponse> => {
     return await this.__authenticator(
       stateId,

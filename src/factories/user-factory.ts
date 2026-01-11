@@ -67,36 +67,6 @@ export class UserFactory {
     ).data;
   };
 
-  public setSite = async (site: Sites, value: string) => {
-    return await this.__http.sendPut<any>(
-      {
-        path: `/profiles`,
-        body: JSON.stringify({
-          connections: {
-            metadata: {
-              position: 8,
-              privacy: 'public',
-            },
-            sites: [
-              {
-                maturity: 'G',
-                metadata: {
-                  position: 0,
-                  privacy: 'public',
-                },
-                site,
-                value,
-              },
-            ],
-          },
-          exclude: false,
-          clientVersion: 1,
-        }),
-      },
-      any(),
-    );
-  };
-
   public sendFriendship = async (
     userId: number,
   ): Promise<FriendshipResponse> => {

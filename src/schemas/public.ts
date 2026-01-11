@@ -44,7 +44,6 @@ export const GetManyMeshesSchema = z.object({
   hasFriends: z.boolean().optional(),
   local: z.boolean().optional(),
   hasInvited: z.boolean().optional(),
-  language: LanguagesSchema,
 });
 
 export type Credentials = z.infer<typeof CredentialsSchema>;

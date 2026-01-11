@@ -2,7 +2,7 @@ import { APIErrorData } from './schemas/error';
 
 // Constants
 
-export const VERSION = '1.18.13';
+export const VERSION = '1.18.14';
 
 export const SYMBOLS = '0123456789abcdef';
 export const API_URL = 'https://api1.a-l-p-a.com';

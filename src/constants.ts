@@ -1,8 +1,10 @@
+import { Agent } from 'undici';
+
 import { APIErrorData } from './schemas/error';
 
 // Constants
 
-export const VERSION = '1.18.15';
+export const VERSION = '1.18.16';
 
 export const SYMBOLS = '0123456789abcdef';
 export const API_URL = 'https://api1.a-l-p-a.com';
@@ -23,6 +25,7 @@ export const API_HEADERS = {
   'Content-Type': 'application/json',
   Accept: 'application/json',
   Connection: 'keep-alive',
+  Host: 'api1.a-l-p-a.com',
   'User-Agent':
     'Rave/2133 (8.1.93) (Android 666; PatheticDevsTriedToStopMe; FunnyASF; ru)',
   'WeMesh-API-Version': '4.0',
@@ -129,3 +132,9 @@ export const CODES_MAP: Record<number, APIErrorData> = {
     message: 'Internal Server Error. Something went wrong.',
   },
 };
+
+export const GLOBAL_DISPATCHER = new Agent({
+  connect: {
+    rejectUnauthorized: false,
+  },
+});

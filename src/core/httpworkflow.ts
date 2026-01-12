@@ -3,7 +3,12 @@ import BodyReadable from 'undici/types/readable';
 import { socksDispatcher, SocksProxies } from 'fetch-socks';
 import { z } from 'zod';
 
-import { API_URL, API_HEADERS, WE_MESH_API_URL } from '../constants';
+import {
+  API_URL,
+  API_HEADERS,
+  WE_MESH_API_URL,
+  GLOBAL_DISPATCHER,
+} from '../constants';
 import { HeadersType, MethodType } from '../schemas/private';
 import { generateHash, generateSSAID } from '../utils/cryptography';
 import { LOGGER } from '../utils/logger';
@@ -97,7 +102,7 @@ export class HttpWorkflow {
       method,
       headers: this.__configureHeaders(config.body, config.headers),
       body: config.body,
-      dispatcher: this.__currentDispatcher,
+      dispatcher: this.__currentDispatcher || GLOBAL_DISPATCHER,
     });
 
     return await this.__handleResponse(
@@ -121,7 +126,7 @@ export class HttpWorkflow {
     const { statusCode, body } = await request(`${baseUrl}${config.path}`, {
       method,
       headers: this.__configureHeaders(undefined, config.headers),
-      dispatcher: this.__currentDispatcher,
+      dispatcher: this.__currentDispatcher || GLOBAL_DISPATCHER,
     });
 
     return await this.__handleResponse(
@@ -197,7 +202,7 @@ export class HttpWorkflow {
       headers: config.headers,
       method: config.method,
       body: config.body,
-      dispatcher: this.__currentDispatcher,
+      dispatcher: this.__currentDispatcher || GLOBAL_DISPATCHER,
     });
 
     return await this.__handleResponse(statusCode, config.path, body, schema);

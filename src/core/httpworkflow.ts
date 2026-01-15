@@ -60,6 +60,7 @@ export class HttpWorkflow {
   private __configureHeaders = (
     data?: string,
     headers?: HeadersType,
+    host?: string,
   ): HeadersType => {
     const timestamp = Date.now().toString();
 
@@ -67,6 +68,7 @@ export class HttpWorkflow {
       ...(headers || this.__headers),
       'request-ts': timestamp,
       ssaid: generateSSAID(),
+      Host: host || this.__headers.Host,
       'request-hash': generateHash(this.token, timestamp, data?.length || 0),
     };
   };
@@ -100,7 +102,11 @@ export class HttpWorkflow {
     const baseUrl = config.baseUrl || API_URL;
     const { statusCode, body } = await request(`${baseUrl}${config.path}`, {
       method,
-      headers: this.__configureHeaders(config.body, config.headers),
+      headers: this.__configureHeaders(
+        config.body,
+        config.headers,
+        config.baseUrl?.slice(8),
+      ),
       body: config.body,
       dispatcher: this.__currentDispatcher || GLOBAL_DISPATCHER,
     });

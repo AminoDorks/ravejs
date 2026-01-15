@@ -3,7 +3,6 @@ import { randomUUID } from 'crypto';
 import z from 'zod';
 
 import {
-  DEFAULT_LANGUAGE,
   EVENTS_API_URL,
   PATCHED_DEVICE,
   PATCHED_IP_DATA,
@@ -85,7 +84,7 @@ export class MeshFactory {
     await this.__http.sendPost<StatusedResponse>(
       {
         baseUrl: EVENTS_API_URL,
-        path: '/event',
+        path: '/api/event',
         body: JSON.stringify({
           device: {
             ...PATCHED_DEVICE,

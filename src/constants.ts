@@ -4,12 +4,12 @@ import { APIErrorData } from './schemas/error';
 
 // Constants
 
-export const VERSION = '1.18.16';
+export const VERSION = '1.18.17';
 
 export const SYMBOLS = '0123456789abcdef';
 export const API_URL = 'https://api1.a-l-p-a.com';
 export const PARSE_API_URL = 'https://api3.a-l-p-a.com';
-export const EVENTS_API_URL = 'https://api2.a-l-p-a.com/api';
+export const EVENTS_API_URL = 'https://api2.a-l-p-a.com';
 export const WE_MESH_API_URL = 'https://wallace2.red.wemesh.ca';
 export const MOJO_AUTH_URL = 'https://api.mojoauth.com';
 export const RAVE_LINK_URL = 'https://rave.link';
